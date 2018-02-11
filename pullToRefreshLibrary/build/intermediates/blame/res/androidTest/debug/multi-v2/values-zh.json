@@ -1,0 +1,34 @@
+{
+    "logs": [
+        {
+            "outputFile": "D:\\workspaces\\heikuai\\pullToRefreshLibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\values-zh\\values-zh.xml",
+            "map": [
+                {
+                    "source": "D:\\workspaces\\heikuai\\pullToRefreshLibrary\\build\\intermediates\\bundles\\debug\\res\\values-zh\\values-zh.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,115,181",
+                        "endColumns": "59,65,64",
+                        "endOffsets": "110,176,241"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "D:\\workspaces\\heikuai\\pullToRefreshLibrary\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-zh\\values-zh.xml",
+            "map": [
+                {
+                    "source": "D:\\workspaces\\heikuai\\pullToRefreshLibrary\\build\\intermediates\\bundles\\debug\\res\\values-zh\\values-zh.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,115,181",
+                        "endColumns": "59,65,64",
+                        "endOffsets": "110,176,241"
+                    }
+                }
+            ]
+        }
+    ]
+}

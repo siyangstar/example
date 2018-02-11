@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:titlebar="http://schemas.android.com/apk/res-auto"
+    xmlns:inputfield="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_grey"
+    android:orientation="vertical" >
+    
+    <com.cqsynet.swifi.view.TitleBar
+        android:id="@+id/titlebar_activity_user_center_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        titlebar:showLeftIcon="true"
+        titlebar:rightIcon="@drawable/btn_enter_selector"
+        titlebar:showRightIcon="true" />
+    
+    <View
+        android:layout_height="1px"
+	    android:layout_width="match_parent"
+	    android:layout_marginTop="10dp"
+	    android:background="@color/line" />
+    
+    <LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="@color/white"
+	    android:orientation="vertical" >
+    
+    <com.cqsynet.swifi.view.LoginInputField
+        android:id="@+id/etValue_activity_user_center_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        inputfield:inputLength="20"
+        inputfield:inputTypePsw="false"
+        inputfield:inputType="4" />
+    
+    </LinearLayout>
+    
+    <View
+        android:layout_height="1px"
+	    android:layout_width="match_parent"
+	    android:background="@color/line" />
+
+    <TextView
+		android:id="@+id/tv_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="点击当前昵称，进行修改"
+        android:textColor="@color/text3"
+	    android:textSize="@dimen/text_size_small"/>
+
+</LinearLayout>
