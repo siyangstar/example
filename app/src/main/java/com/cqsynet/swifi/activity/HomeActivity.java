@@ -31,6 +31,7 @@ import com.cqsynet.swifi.activity.social.PerfectInfoActivity;
 import com.cqsynet.swifi.activity.social.SocialActivity;
 import com.cqsynet.swifi.broadcast.StatisticsReceiver;
 import com.cqsynet.swifi.db.ChatMsgDao;
+import com.cqsynet.swifi.db.FriendApplyDao;
 import com.cqsynet.swifi.fragment.FindFragment;
 import com.cqsynet.swifi.fragment.NewsMainFragment;
 import com.cqsynet.swifi.model.UserInfo;
@@ -297,8 +298,7 @@ public class HomeActivity extends BasicFragmentActivity implements OnClickListen
             findViewById(R.id.ivSnsMore_home).setVisibility(View.GONE);
         }
         //设置红点未读数量
-        ChatMsgDao chatMsgDao = ChatMsgDao.getInstance(HomeActivity.this);
-        int count = chatMsgDao.queryAllUnReadMsgCount();
+        int count = ChatMsgDao.getInstance(this).queryAllUnReadMsgCount() + FriendApplyDao.getInstance(this).queryUnReadApplyCount();
         if (count < 100) {
             mTvSnsHint.setText(count + "");
         } else {

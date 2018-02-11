@@ -13,20 +13,20 @@
  */
 package com.cqsynet.swifi.activity;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cqsynet.swifi.R;
 import com.cqsynet.swifi.db.RegionDao;
 import com.cqsynet.swifi.db.RegionDao.KeyValue;
-import com.cqsynet.swifi.view.TitleBar;
+
+import java.util.List;
 
 /**
  * 个人中心居住地编辑页面
@@ -44,7 +44,9 @@ import com.cqsynet.swifi.view.TitleBar;
  */
 public class EditAddressActivity extends HkActivity implements OnClickListener {
 
-	private TitleBar mTitleBar;
+	private ImageView mIvBack;
+	private TextView mTvTitle;
+	private TextView mTvSave;
 	private TextView mTvProvince;
 	private TextView mTvCity;
 	private TextView mTvCounty;
@@ -64,10 +66,12 @@ public class EditAddressActivity extends HkActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_edit_addres);
-		mTitleBar = findViewById(R.id.titlebar_activity_edit_address);
-		mTitleBar.setTitle("选择地区");
-		mTitleBar.setLeftIconClickListener(this);
-		mTitleBar.setRightIconClickListener(this);
+        mIvBack = findViewById(R.id.iv_back);
+        mIvBack.setOnClickListener(this);
+        mTvTitle = findViewById(R.id.tv_title);
+        mTvTitle.setText("选择地区");
+        mTvSave = findViewById(R.id.tv_save);
+        mTvSave.setOnClickListener(this);
 		mTvProvince = findViewById(R.id.tvProvince_activity_edit_address);
 		mTvCity = findViewById(R.id.tvCity_activity_edit_address);
 		mTvCounty = findViewById(R.id.tvCounty_activity_edit_address);
@@ -101,10 +105,10 @@ public class EditAddressActivity extends HkActivity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.ivBack_titlebar_layout) { // 返回
+		if (v.getId() == R.id.iv_back) { // 返回
 			finish();
 
-		} else if (v.getId() == R.id.ivMenu_titlebar_layout) { // 确定
+		} else if (v.getId() == R.id.tv_save) { // 确定
 			String areaCode = "";
 			String areaName = "";
 			if (mTvProvince.getTag() != null) {

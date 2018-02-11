@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -174,6 +175,7 @@ public class PerfectInfoActivity extends HkActivity {
         }
         mEtNickname.setText(Globals.g_userInfo.nickname);
         mEtNickname.setSelection(Globals.g_userInfo.nickname.length());
+        mEtSign.setText(Globals.g_userInfo.sign);
         if (!TextUtils.isEmpty(mEtNickname.getText()) && mHasAvatar) {
             mTvNext.setBackgroundResource(R.drawable.bg_green_radius_normal);
         }
@@ -207,7 +209,7 @@ public class PerfectInfoActivity extends HkActivity {
         } else if ("40以上".equals(Globals.g_userInfo.age)) {
             mTvHigher40.setBackgroundResource(R.drawable.bg_green_radius_selector);
             mTvHigher40.setTextColor(getResources().getColor(R.color.white));
-            mAge = "40以上";
+            mAge = "40岁以上";
         }
         if (!TextUtils.isEmpty(mSex) && !TextUtils.isEmpty(mAge)) {
             mTvComplete.setBackgroundResource(R.drawable.bg_green_radius_selector);
@@ -354,7 +356,7 @@ public class PerfectInfoActivity extends HkActivity {
                         mHasAvatar = true;
                     }
                 }
-                if (!TextUtils.isEmpty(mEtNickname.getText()) && !TextUtils.isEmpty(mEtSign.getText()) && mHasAvatar) {
+                if (!TextUtils.isEmpty(mEtNickname.getText()) && mHasAvatar) {
                     mTvNext.setBackgroundResource(R.drawable.bg_green_radius_selector);
                 } else {
                     mTvNext.setBackgroundResource(R.drawable.bg_white_radius_disable);
@@ -377,36 +379,39 @@ public class PerfectInfoActivity extends HkActivity {
         userInfo.sex = mSex;
         userInfo.age = mAge;
         userInfo.setting = "0";
-        File avatarFile;
+        File avatarFile = null;
         if (!TextUtils.isEmpty(mHeadImagePath)) {
             avatarFile = new File(mHeadImagePath);
-        } else {
-            avatarFile = new File(Globals.g_userInfo.headUrl);
         }
 
         WebServiceIf.updateUserInfo(this, avatarFile, userInfo, new WebServiceIf.IResponseCallback() {
             @Override
             public void onResponse(String response) throws JSONException {
                 if (response != null) {
+                    Log.i("PerfectInfoActivity", "@@@#@response: " + response);
                     BaseResponseObject object = new Gson().fromJson(response, BaseResponseObject.class);
                     if (object.header != null) {
                         if (AppConstants.RET_OK.equals(object.header.ret)) {
                             Globals.g_userInfo.nickname = mEtNickname.getText().toString();
-                            Globals.g_userInfo.headUrl = mHeadImagePath;
+                            if (!TextUtils.isEmpty(mHeadImagePath)) {
+                                Globals.g_userInfo.headUrl = mHeadImagePath;
+                            }
                             Globals.g_userInfo.sex = userInfo.sex;
                             Globals.g_userInfo.age = userInfo.age;
                             Globals.g_userInfo.sign = userInfo.sign;
                             Globals.g_userInfo.setting = "0";
 
                             SharedPreferencesInfo.setTagString(PerfectInfoActivity.this, SharedPreferencesInfo.USER_INFO, new Gson().toJson(Globals.g_userInfo));
-                            Intent intent = new Intent(AppConstants.ACTION_REFRESH_HEADER);
-                            intent.putExtra("headUrl", mHeadImagePath);
-                            sendBroadcast(intent);
+                            if (!TextUtils.isEmpty(mHeadImagePath)) {
+                                Intent intent = new Intent(AppConstants.ACTION_REFRESH_HEADER);
+                                intent.putExtra("headUrl", mHeadImagePath);
+                                sendBroadcast(intent);
+                            }
 
                             ToastUtil.showToast(PerfectInfoActivity.this, "提交个人信息成功");
 
-                            PerfectInfoActivity.this.finish();
                             startActivity(new Intent(PerfectInfoActivity.this, SocialActivity.class));
+                            PerfectInfoActivity.this.finish();
                         } else if (!TextUtils.isEmpty(object.header.errCode)) {
                             ToastUtil.showToast(PerfectInfoActivity.this, getResources().getString(R.string.update_user_info_fail) + "(" + object
                                     .header.errCode + ")");

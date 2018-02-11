@@ -58,6 +58,7 @@ public class RemarkActivity extends HkActivity {
         mEtRemark = findViewById(R.id.et_remark);
         if (!TextUtils.isEmpty(mRemark)) {
             mEtRemark.setText(mRemark);
+            mEtRemark.setSelection(mRemark.length());
         }
         TextView tvConfirm = findViewById(R.id.tv_confirm);
         tvConfirm.setOnClickListener(new View.OnClickListener() {

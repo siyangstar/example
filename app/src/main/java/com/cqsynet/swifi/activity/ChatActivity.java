@@ -72,7 +72,6 @@ import com.cqsynet.swifi.util.AppUtil;
 import com.cqsynet.swifi.util.SharedPreferencesInfo;
 import com.cqsynet.swifi.util.SoundMeterUtil;
 import com.cqsynet.swifi.util.ToastUtil;
-import com.cqsynet.swifi.view.TitleBar;
 import com.google.gson.Gson;
 import com.yanzhenjie.permission.AndPermission;
 
@@ -86,7 +85,9 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
     private static final int REQUEST_CODE_IMAGE = 0;
     public static String mFriendAccount; //对方的账号
     public static String mPosition; //对方的位置
-    private TitleBar mTitlebar;
+    private ImageView mIvBack;
+    private ImageView mIvMime;
+    private TextView mTvTitle;
     private Button mBtnTypeSwitcher;
     private EditText mEtContent;
     private Button mBtnMore;
@@ -163,21 +164,6 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
         mAdapter.notifyDataSetChanged();
         mLvChat.setSelection(mAdapter.getCount() - 1);
 
-//        if (mChatList != null) {
-//            Iterator<ChatMsgInfo> it = mChatList.iterator();
-//            while (it.hasNext()) {
-//                ChatMsgInfo chatMsgInfo = it.next();
-//                boolean isNeedUpdate = false;
-//                if (chatMsgInfo.sendStatus == 1) {
-//                    chatMsgInfo.sendStatus = 2;
-//                    isNeedUpdate = true;
-//                }
-//                if (isNeedUpdate) {
-//                    chatMsgDao.saveChatMsgItem(chatMsgInfo);
-//                }
-//            }
-//        }
-
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_HEADSET_PLUG);
         registerReceiver(mHeadsetReceiver, filter);
@@ -189,11 +175,11 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
         for (ChatMsgInfo info : mChatList) {
             if (info.readStatus == 0) {
                 info.readStatus = 1;
-                chatMsgDao.saveChatMsgItem(info);
+                chatMsgDao.saveChatMsgItem(info, info.category);
             }
             if (info.sendStatus == 1) {
                 info.sendStatus = 2;
-                chatMsgDao.saveChatMsgItem(info);
+                chatMsgDao.saveChatMsgItem(info, info.category);
             }
         }
     }
@@ -264,7 +250,9 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
     }
 
     public void initView() {
-        mTitlebar = findViewById(R.id.titlebar_activity_chat);
+        mIvBack = findViewById(R.id.iv_back);
+        mIvMime = findViewById(R.id.iv_mine);
+        mTvTitle = findViewById(R.id.tv_title);
         mBtnTypeSwitcher = findViewById(R.id.btnTypeSwitcher_activity_chat);
         mBtnSendText = findViewById(R.id.btnSendText_activity_chat);
         mBtnSendVoice = findViewById(R.id.btnSendVoice_activity_chat);
@@ -277,8 +265,8 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
         mIvBottleCircle1 = findViewById(R.id.ivCircle1_activity_chat);
         mIvBottleCircle2 = findViewById(R.id.ivCircle2_activity_chat);
         mTvHint = findViewById(R.id.tvHint_activity_chat);
-        mTitlebar.setLeftIconClickListener(this);
-        mTitlebar.setRightIconClickListener(this);
+        mIvBack.setOnClickListener(this);
+        mIvMime.setOnClickListener(this);
         mBtnTypeSwitcher.setOnClickListener(this);
         mBtnMore.setOnClickListener(this);
         mBtnSendText.setOnClickListener(this);
@@ -441,13 +429,12 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ivBack_titlebar_layout: //退出
-                //收起软键盘
+            case R.id.iv_back:
                 InputMethodManager ime = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 ime.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 finish();
                 break;
-            case R.id.ivMenu_titlebar_layout: // 查看个人资料
+            case R.id.iv_mine:
                 Intent friendIntent = new Intent();
                 friendIntent.setClass(ChatActivity.this, PersonInfoActivity.class);
                 friendIntent.putExtra("friendAccount", mFriendAccount);
@@ -548,19 +535,19 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
 
         if (!TextUtils.isEmpty(mFriendAccount)) {
             if ("0".equals(mCategory)) {
-                mTitlebar.setTitle("来自" + mPosition + "的瓶子");
+                mTvTitle.setText("来自" + mPosition + "的瓶子");
             } else if ("1".equals(mCategory)) {
                 ContactDao contactDao = ContactDao.getInstance(this);
                 UserInfo userInfo = contactDao.queryUser(mFriendAccount);
                 if (userInfo != null) {
                     if (!TextUtils.isEmpty(userInfo.remark)) {
-                        mTitlebar.setTitle(userInfo.remark);
+                        mTvTitle.setText(userInfo.remark);
                     } else {
-                        mTitlebar.setTitle(userInfo.nickname);
+                        mTvTitle.setText(userInfo.nickname);
                     }
                 }
             }
-            mAdapter = new ChatMsgViewAdapter(this, mChatList, mCategory);
+            mAdapter = new ChatMsgViewAdapter(this, mChatList, mCategory, mPosition);
             mLvChat.setAdapter(mAdapter);
             mLvChat.setSelection(mAdapter.getCount() - 1);
         } else {
@@ -630,7 +617,11 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
 
                             //更新数据库中的进度条状态
                             ChatMsgDao chatMsgDao = ChatMsgDao.getInstance(ChatActivity.this);
-                            chatMsgDao.saveChatMsgItem(chatMsgInfo);
+                            if ("0".equals(mCategory)) {
+                                chatMsgDao.saveChatMsgItem(chatMsgInfo, "bottle");
+                            } else if ("1".equals(mCategory)){
+                                chatMsgDao.saveChatMsgItem(chatMsgInfo, "friend");
+                            }
 
                             updateMsg(chatMsgInfo);
                         } else {
@@ -643,7 +634,11 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
                             chatMsgInfo.userAccount = SharedPreferencesInfo.getTagString(ChatActivity.this, SharedPreferencesInfo.ACCOUNT);
                             chatMsgInfo.receiveAccount = mFriendAccount;
                             chatMsgInfo.owner = SharedPreferencesInfo.getTagString(ChatActivity.this, SharedPreferencesInfo.ACCOUNT);
-                            chatMsgDao.saveChatMsgItem(chatMsgInfo);
+                            if ("0".equals(mCategory)) {
+                                chatMsgDao.saveChatMsgItem(chatMsgInfo, "bottle");
+                            } else if ("1".equals(mCategory)){
+                                chatMsgDao.saveChatMsgItem(chatMsgInfo, "friend");
+                            }
                             if (header.errCode.equals("36113")) {
                                 ToastUtil.showToast(ChatActivity.this, "对方生气了,不想再收到你的消息了");
                             } else if (header.errCode.equals("36116")) {
@@ -654,7 +649,7 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
                                 tip.type = "3";
                                 tip.userAccount = mFriendAccount;
                                 tip.receiveAccount = SharedPreferencesInfo.getTagString(ChatActivity.this, SharedPreferencesInfo.ACCOUNT);
-                                tip.content = "对方可能已经解除了你们的好友关系，点击重新申请好友";
+                                tip.content = "对方已经开启了好友验证，你还不是TA的好友，请先发送验证请求。";
                                 tip.readStatus = 1;
                                 tip.sendStatus = 2;
                                 tip.date = String.valueOf(System.currentTimeMillis());
@@ -663,7 +658,11 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
                                 mAdapter.notifyDataSetChanged();
                                 mLvChat.setSelection(mLvChat.getCount() - 1);
 
-                                chatMsgDao.saveChatMsgItem(tip);
+                                if ("0".equals(mCategory)) {
+                                    chatMsgDao.saveChatMsgItem(tip, "bottle");
+                                } else if ("1".equals(mCategory)){
+                                    chatMsgDao.saveChatMsgItem(tip, "friend");
+                                }
                             } else {
                                 ToastUtil.showToast(ChatActivity.this, getResources().getString(R.string.request_fail_warning) + "(" + header.errCode + ")");
                             }
@@ -686,7 +685,11 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
                 chatMsgInfo.userAccount = SharedPreferencesInfo.getTagString(ChatActivity.this, SharedPreferencesInfo.ACCOUNT);
                 chatMsgInfo.receiveAccount = mFriendAccount;
                 chatMsgInfo.owner = SharedPreferencesInfo.getTagString(ChatActivity.this, SharedPreferencesInfo.ACCOUNT);
-                chatMsgDao.saveChatMsgItem(chatMsgInfo);
+                if ("0".equals(mCategory)) {
+                    chatMsgDao.saveChatMsgItem(chatMsgInfo, "bottle");
+                } else if ("1".equals(mCategory)){
+                    chatMsgDao.saveChatMsgItem(chatMsgInfo, "friend");
+                }
                 ToastUtil.showToast(ChatActivity.this, R.string.request_fail_warning);
             }
         };
@@ -787,7 +790,11 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
         } else {
             chatMsgInfo.date = System.currentTimeMillis() + "";
         }
-        chatMsgDao.saveChatMsgItem(chatMsgInfo);
+        if ("0".equals(mCategory)) {
+            chatMsgDao.saveChatMsgItem(chatMsgInfo, "bottle");
+        } else if ("1".equals(mCategory)){
+            chatMsgDao.saveChatMsgItem(chatMsgInfo, "friend");
+        }
         mChatList.add(chatMsgInfo);
         mAdapter.notifyDataSetChanged();
         mLvChat.setSelection(mLvChat.getCount() - 1);

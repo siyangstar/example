@@ -16,7 +16,10 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +37,8 @@ import com.cqsynet.swifi.Globals;
 import com.cqsynet.swifi.R;
 import com.cqsynet.swifi.activity.BottleUserSettingActivity;
 import com.cqsynet.swifi.activity.ImagePreviewActivity;
+import com.cqsynet.swifi.activity.UserCenterActivity;
+import com.cqsynet.swifi.activity.social.BottleFriendInfoActivity;
 import com.cqsynet.swifi.activity.social.FriendApplyActivity;
 import com.cqsynet.swifi.activity.social.PersonInfoActivity;
 import com.cqsynet.swifi.db.ContactDao;
@@ -52,6 +57,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
     private List<ChatMsgInfo> mList;
     private Context mContext;
     private String mCategory;
+    private String mPosition;
     private LayoutInflater mInflater;
     private MediaPlayer mMediaPlayer = new MediaPlayer();
     private static final int VIEW_TYPE_COUNT = 7;
@@ -65,10 +71,11 @@ public class ChatMsgViewAdapter extends BaseAdapter {
     private String mCurrentPlaying = ""; //当前正在播放的语音文件
     private ImageView mIvVoicePlaying; //当前正在播放语音动画view
 
-    public ChatMsgViewAdapter(Context context, List<ChatMsgInfo> list, String category) {
+    public ChatMsgViewAdapter(Context context, List<ChatMsgInfo> list, String category, String position) {
         mContext = context;
         mList = list;
         mCategory = category;
+        mPosition = position;
         mInflater = LayoutInflater.from(context);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -204,14 +211,6 @@ public class ChatMsgViewAdapter extends BaseAdapter {
                 case VIEW_TYPE_TIP:
                     convertView = mInflater.inflate(R.layout.chat_item_tip, null);
                     viewHolder.tvTip = convertView.findViewById(R.id.tv_tip);
-                    viewHolder.tvTip.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(mContext, FriendApplyActivity.class);
-                            intent.putExtra("friendAccount", chatMsgInfo.userAccount);
-                            mContext.startActivity(intent);
-                        }
-                    });
                     break;
             }
             convertView.setTag(viewHolder);
@@ -260,8 +259,13 @@ public class ChatMsgViewAdapter extends BaseAdapter {
                 viewHolder.ivHead.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(mContext, BottleUserSettingActivity.class);
-                        mContext.startActivity(intent);
+                        if ("0".equals(mCategory)) {
+                            Intent intent = new Intent(mContext, BottleUserSettingActivity.class);
+                            mContext.startActivity(intent);
+                        } else if ("1".equals(mCategory)) {
+                            Intent intent = new Intent(mContext, UserCenterActivity.class);
+                            mContext.startActivity(intent);
+                        }
                     }
                 });
             } else {
@@ -277,11 +281,19 @@ public class ChatMsgViewAdapter extends BaseAdapter {
                 viewHolder.ivHead.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent friendIntent = new Intent();
-                        friendIntent.setClass(mContext, PersonInfoActivity.class);
-                        friendIntent.putExtra("friendAccount", chatMsgInfo.userAccount);
-                        friendIntent.putExtra("isFriend", mCategory);
-                        mContext.startActivity(friendIntent);
+                        if ("0".equals(mCategory)) {
+                            Intent intent = new Intent();
+                            intent.setClass(mContext, BottleFriendInfoActivity.class);
+                            intent.putExtra("bottleAccount", chatMsgInfo.userAccount);
+                            intent.putExtra("position", mPosition);
+                            mContext.startActivity(intent);
+                        } else if ("1".equals(mCategory)) {
+                            Intent friendIntent = new Intent();
+                            friendIntent.setClass(mContext, PersonInfoActivity.class);
+                            friendIntent.putExtra("friendAccount", chatMsgInfo.userAccount);
+                            friendIntent.putExtra("isFriend", mCategory);
+                            mContext.startActivity(friendIntent);
+                        }
                     }
                 });
             }
@@ -406,7 +418,23 @@ public class ChatMsgViewAdapter extends BaseAdapter {
                 });
                 break;
             case "3":
-                viewHolder.tvTip.setText(chatMsgInfo.content);
+                SpannableString spannableString = new SpannableString(chatMsgInfo.content);
+                int start = chatMsgInfo.content.length() - 5;
+                int end = chatMsgInfo.content.length() - 1;
+                spannableString.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                    }
+                }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                viewHolder.tvTip.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, FriendApplyActivity.class);
+                        intent.putExtra("friendAccount", chatMsgInfo.userAccount);
+                        mContext.startActivity(intent);
+                    }
+                });
+                viewHolder.tvTip.setText(spannableString);
                 break;
         }
 

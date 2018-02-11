@@ -15,7 +15,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,9 +76,9 @@ public class ChatListAdapter extends BaseAdapter {
             holderView = (HolderView) convertView.getTag();
         }
         ChatListItemInfo itemObj = getItem(position);
-        if ("我的瓶子".equals(itemObj.itemType)) {
+        if ("MyBottle".equals(itemObj.itemType)) {
             holderView.ivHead.setImageResource(R.drawable.ic_my_bottle);
-        } else if ("好友申请".equals(itemObj.itemType)) {
+        } else if ("FriendApply".equals(itemObj.itemType)) {
             holderView.ivHead.setImageResource(R.drawable.ic_friend_apply);
         } else {
             ContactDao dao = ContactDao.getInstance(mContext);
@@ -113,21 +112,27 @@ public class ChatListAdapter extends BaseAdapter {
             builder.setSpan(new ForegroundColorSpan(Color.RED), 0, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holderView.tvContent.setText(builder);
         } else if ("0".equals(itemObj.type)) {
-            holderView.tvContent.setText(itemObj.content);
+            String[] temp = itemObj.content.split("\n");
+            if (temp.length > 0) {
+                holderView.tvContent.setText(temp[temp.length - 1]);
+            } else {
+                holderView.tvContent.setText(itemObj.content);
+            }
         } else if ("1".equals(itemObj.type)) {
             holderView.tvContent.setText("[语音]");
         } else if ("2".equals(itemObj.type)) {
             holderView.tvContent.setText("[图片]");
         }
-        Log.i("ChatListAdapter", "@@@#@@content: " + itemObj.content);
         //设置红点未读数量
         int count;
-        if ("我的瓶子".equals(itemObj.itemType)) {
+        if ("MyBottle".equals(itemObj.itemType)) {
             count = BottleListDao.getInstance(mContext).queryUnReadMsgCount(itemObj.chatId);
-        } else if ("好友申请".equals(itemObj.itemType)) {
+        } else if ("FriendApply".equals(itemObj.itemType)) {
             count = FriendApplyDao.getInstance(mContext).queryUnReadApplyCount();
+        } else if ("FriendChat".equals(itemObj.itemType)){
+            count = chatMsgDao.queryUnReadMsgCount(itemObj.userAccount, "friend");
         } else {
-            count = chatMsgDao.queryUnReadMsgCount(itemObj.userAccount);
+            count = chatMsgDao.queryUnReadMsgCount(itemObj.userAccount, "bottle");
         }
         if (count < 100) {
             holderView.tvRedPoint.setText(count + "");

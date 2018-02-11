@@ -125,10 +125,19 @@ public class FriendReplyActivity extends HkActivity {
                 }
             }
         });
+        TextView tvHint = findViewById(R.id.tv_hint);
 
         if (!"0".equals(mFriendApplyInfo.replyStatus)) {
             tvAgree.setVisibility(View.GONE);
             tvRefuse.setVisibility(View.GONE);
+            tvHint.setVisibility(View.VISIBLE);
+            if ("1".equals(mFriendApplyInfo.replyStatus)) {
+                tvHint.setText("已同意");
+            } else if ("2".equals(mFriendApplyInfo.replyStatus)) {
+                tvHint.setText("已拒绝");
+            } else if ("3".equals(mFriendApplyInfo.replyStatus)) {
+                tvHint.setText("已拉黑");
+            }
         }
     }
 

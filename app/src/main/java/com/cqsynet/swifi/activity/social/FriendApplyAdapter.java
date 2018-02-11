@@ -75,7 +75,12 @@ public class FriendApplyAdapter extends BaseAdapter {
             viewHolder.tvName.setText(friendApply.nickname);
         }
         if (!TextUtils.isEmpty(friendApply.content)) {
-            viewHolder.tvMessage.setText(friendApply.content);
+            String[] temp = friendApply.content.split("\n");
+            if (temp.length > 0) {
+                viewHolder.tvMessage.setText(temp[temp.length - 1]);
+            } else {
+                viewHolder.tvMessage.setText(friendApply.content);
+            }
         }
         viewHolder.tvAgree.setOnClickListener(new View.OnClickListener() {
             @Override

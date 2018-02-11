@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.cqsynet.swifi.R;
 import com.cqsynet.swifi.activity.BasicFragmentActivity;
 import com.cqsynet.swifi.activity.UserCenterActivity;
+import com.cqsynet.swifi.db.ChatMsgDao;
+import com.cqsynet.swifi.db.FriendApplyDao;
 import com.cqsynet.swifi.view.NoSlidingViewPager;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class SocialActivity extends BasicFragmentActivity {
     private TextView mTvTitle;
     private NoSlidingViewPager mViewPager;
     private ImageView mIvMessage;
+    private TextView mTvMsgHint;
     private ImageView mIvFindPerson;
     private ImageView mIvFriends;
 
@@ -65,6 +68,7 @@ public class SocialActivity extends BasicFragmentActivity {
 
         FrameLayout flMessage = findViewById(R.id.fl_message);
         mIvMessage = findViewById(R.id.iv_message);
+        mTvMsgHint = findViewById(R.id.tv_msg_hint);
         LinearLayout llFindPerson = findViewById(R.id.ll_find_person);
         mIvFindPerson = findViewById(R.id.iv_find_person);
         LinearLayout llFriends = findViewById(R.id.ll_friends);
@@ -100,5 +104,21 @@ public class SocialActivity extends BasicFragmentActivity {
                 mViewPager.setCurrentItem(2, false);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int count = ChatMsgDao.getInstance(this).queryAllUnReadMsgCount() + FriendApplyDao.getInstance(this).queryUnReadApplyCount();
+        if (count < 100) {
+            mTvMsgHint.setText(count + "");
+        } else {
+            mTvMsgHint.setText("···");
+        }
+        if (count != 0) {
+            mTvMsgHint.setVisibility(View.VISIBLE);
+        } else {
+            mTvMsgHint.setVisibility(View.GONE);
+        }
     }
 }

@@ -98,6 +98,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String CHAT_COL_SEND_STATUS = "sendStatus";
     public static final String CHAT_COL_READ_STATUS = "readStatus";
     public static final String CHAT_COL_OWNER = "owner";
+    public static final String CHAT_COL_CATEGORY= "category";
     // 好友请求
     public static final String APPLY_COL_ID = "_id";
     public static final String APPLY_COL_MSG_ID = "msgId";
@@ -195,6 +196,7 @@ public class DBHelper extends SQLiteOpenHelper {
             + CHAT_COL_CONTENT + " TEXT,"
             + CHAT_COL_SEND_STATUS + " INTEGER,"
             + CHAT_COL_READ_STATUS + " INTEGER,"
+            + CHAT_COL_CATEGORY + " TEXT,"
             + CHAT_COL_DATE + " TEXT,PRIMARY KEY(" + CHAT_COL_CHATID + "," + CHAT_COL_DATE + "))";
     // 创建好友申请表的语句
     public static final String CREATE_TABLE_FRIEND_APPLY = "CREATE TABLE IF NOT EXISTS " + FRIEND_APPLY_TABLE + "("

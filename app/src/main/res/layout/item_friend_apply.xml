@@ -50,6 +50,7 @@
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="82dp"
+                android:maxLines="1"
                 android:textColor="@color/text3"
                 android:textSize="14sp" />
 

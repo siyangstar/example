@@ -117,7 +117,10 @@
                     android:id="@+id/tv_hint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
                     android:text="@string/social_no_person"
                     android:textColor="@color/text2"
                     android:textSize="14sp" />
@@ -125,7 +128,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginTop="6dp"
+                    android:gravity="center"
                     android:text="@string/social_refresh"
                     android:textColor="@color/text3"
                     android:textSize="12sp" />
@@ -133,6 +139,7 @@
 
             <ProgressBar
                 android:id="@+id/loading_bar"
+                style="@style/progress_circle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

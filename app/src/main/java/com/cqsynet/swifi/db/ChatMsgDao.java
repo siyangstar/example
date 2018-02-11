@@ -40,7 +40,7 @@ public class ChatMsgDao {
      *
      * @param chatMsgInfo
      */
-    public void saveChatMsgItem(ChatMsgInfo chatMsgInfo) {
+    public void saveChatMsgItem(ChatMsgInfo chatMsgInfo, String category) {
         DBHelper db = new DBHelper(mContext);
         ContentValues contentValues = new ContentValues();
         contentValues.put(DBHelper.CHAT_COL_ID, chatMsgInfo.msgId);
@@ -53,6 +53,7 @@ public class ChatMsgDao {
         contentValues.put(DBHelper.CHAT_COL_SEND_STATUS, chatMsgInfo.sendStatus);
         contentValues.put(DBHelper.CHAT_COL_READ_STATUS, chatMsgInfo.readStatus);
         contentValues.put(DBHelper.CHAT_COL_OWNER, SharedPreferencesInfo.getTagString(mContext, SharedPreferencesInfo.ACCOUNT));
+        contentValues.put(DBHelper.CHAT_COL_CATEGORY, category);
         Cursor cur = db.getWritableDatabase().query(DBHelper.CHAT_TABLE, null, DBHelper.CHAT_COL_ID + "=?", new String[]{chatMsgInfo.msgId}, null, null, null);
         if (cur.getCount() > 0) {
             db.getWritableDatabase().update(DBHelper.CHAT_TABLE, contentValues, DBHelper.CHAT_COL_ID + "=?", new String[]{chatMsgInfo.msgId});
@@ -108,12 +109,14 @@ public class ChatMsgDao {
                 chatMsgInfo.msgId = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_ID));
                 chatMsgInfo.chatId = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_CHATID));
                 chatMsgInfo.userAccount = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_ACCOUNT));
+                chatMsgInfo.receiveAccount = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_RECEIVE_ACCOUNT));
                 chatMsgInfo.type = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_TYPE));
                 chatMsgInfo.content = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_CONTENT));
                 chatMsgInfo.date = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_DATE));
                 chatMsgInfo.sendStatus = cur.getInt(cur.getColumnIndex(DBHelper.CHAT_COL_SEND_STATUS));
                 chatMsgInfo.readStatus = cur.getInt(cur.getColumnIndex(DBHelper.CHAT_COL_READ_STATUS));
                 chatMsgInfo.owner = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_OWNER));
+                chatMsgInfo.category = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_CATEGORY));
                 list.add(chatMsgInfo);
             }
         }
@@ -126,20 +129,23 @@ public class ChatMsgDao {
         List<ChatMsgInfo> list = new ArrayList<>();
         DBHelper db = new DBHelper(mContext);
         Cursor cur = db.getWritableDatabase().query(DBHelper.CHAT_TABLE, null,
-                DBHelper.CHAT_COL_ACCOUNT + "=? or " + DBHelper.CHAT_COL_RECEIVE_ACCOUNT + "=? and " + DBHelper.CHAT_COL_OWNER + "=?",
-                new String[]{userAccount, userAccount, owner}, null, null, DBHelper.CHAT_COL_DATE);
+                DBHelper.CHAT_COL_ACCOUNT + "=? and " + DBHelper.CHAT_COL_CATEGORY + "=? and " + DBHelper.CHAT_COL_OWNER + "=? or "
+                        + DBHelper.CHAT_COL_RECEIVE_ACCOUNT + "=? and " + DBHelper.CHAT_COL_CATEGORY + "=? and " + DBHelper.CHAT_COL_OWNER + "=?",
+                new String[]{userAccount, "friend", owner, userAccount, "friend", owner}, null, null, DBHelper.CHAT_COL_DATE);
         if (cur.moveToFirst()) {
             do {
                 ChatMsgInfo chatMsgInfo = new ChatMsgInfo();
                 chatMsgInfo.msgId = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_ID));
                 chatMsgInfo.chatId = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_CHATID));
                 chatMsgInfo.userAccount = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_ACCOUNT));
+                chatMsgInfo.receiveAccount = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_RECEIVE_ACCOUNT));
                 chatMsgInfo.type = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_TYPE));
                 chatMsgInfo.content = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_CONTENT));
                 chatMsgInfo.date = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_DATE));
                 chatMsgInfo.sendStatus = cur.getInt(cur.getColumnIndex(DBHelper.CHAT_COL_SEND_STATUS));
                 chatMsgInfo.readStatus = cur.getInt(cur.getColumnIndex(DBHelper.CHAT_COL_READ_STATUS));
                 chatMsgInfo.owner = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_OWNER));
+                chatMsgInfo.category = cur.getString(cur.getColumnIndex(DBHelper.CHAT_COL_CATEGORY));
                 list.add(chatMsgInfo);
             } while (cur.moveToNext());
         }
@@ -148,12 +154,12 @@ public class ChatMsgDao {
         return list;
     }
 
-    public int queryUnReadMsgCount(String userAccount) {
+    public int queryUnReadMsgCount(String userAccount, String category) {
         int count = 0;
         DBHelper db = new DBHelper(mContext);
         String sql;
         sql = "select count(*) from " + DBHelper.CHAT_TABLE + " where " + DBHelper.CHAT_COL_ACCOUNT + "=\"" + userAccount
-                + "\" and " + DBHelper.CHAT_COL_READ_STATUS + "=0 and "
+                + "\" and " + DBHelper.CHAT_COL_READ_STATUS + "=0 and " + DBHelper.CHAT_COL_CATEGORY + "=\"" + category + "\" and "
                 + DBHelper.CHAT_COL_OWNER + "=\"" + SharedPreferencesInfo.getTagString(mContext, SharedPreferencesInfo.ACCOUNT) + "\"";
         Cursor cur = db.getWritableDatabase().rawQuery(sql, null);
         if (cur.moveToFirst()) {

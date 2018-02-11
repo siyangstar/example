@@ -22,6 +22,8 @@ import java.util.List;
  */
 public class FriendsAdapter extends BaseAdapter {
 
+    private static final String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#";
+
     private Context mContext;
     private List<FriendsInfo> mFriends;
 
@@ -63,10 +65,10 @@ public class FriendsAdapter extends BaseAdapter {
         if (position == 0) {
             if (!TextUtils.isEmpty(friend.remark)) {
                 viewHolder.tvLetter.setVisibility(View.VISIBLE);
-                viewHolder.tvLetter.setText(Pinyin.toPinyin(friend.remark.toCharArray()[0]));
+                viewHolder.tvLetter.setText(Pinyin.toPinyin(friend.remark.toCharArray()[0]).substring(0, 1));
             } else if (!TextUtils.isEmpty(friend.nickname)) {
                 viewHolder.tvLetter.setVisibility(View.VISIBLE);
-                viewHolder.tvLetter.setText(Pinyin.toPinyin(friend.nickname.toCharArray()[0]));
+                viewHolder.tvLetter.setText(Pinyin.toPinyin(friend.nickname.toCharArray()[0]).substring(0, 1));
             }
         } else if (position > 0) {
             String currentName = "";
@@ -81,10 +83,14 @@ public class FriendsAdapter extends BaseAdapter {
             } else if (!TextUtils.isEmpty(mFriends.get(position - 1).nickname)) {
                 lastName = mFriends.get(position - 1).nickname;
             }
-            if (!Pinyin.toPinyin(currentName.toCharArray()[0]).substring(0, 1)
-                    .equals(Pinyin.toPinyin(lastName.toCharArray()[0]).substring(0, 1))) {
+            String firstLetter = Pinyin.toPinyin(currentName.toCharArray()[0]).substring(0, 1);
+            if (!firstLetter.equals(Pinyin.toPinyin(lastName.toCharArray()[0]).substring(0, 1))) {
                 viewHolder.tvLetter.setVisibility(View.VISIBLE);
-                viewHolder.tvLetter.setText(Pinyin.toPinyin(currentName.toCharArray()[0]).substring(0, 1));
+                if (!LETTERS.contains(firstLetter)) {
+                    viewHolder.tvLetter.setText("#");
+                } else {
+                    viewHolder.tvLetter.setText(Pinyin.toPinyin(currentName.toCharArray()[0]).substring(0, 1));
+                }
             } else {
                 viewHolder.tvLetter.setVisibility(View.GONE);
             }

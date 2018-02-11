@@ -316,7 +316,6 @@ public class PushService extends Service {
                     ack.call();
                     String msg = args[1].toString(); // 消息
                     String msgId = args[0].toString(); // 消息id
-                    Log.i("PushService", "@@@#@msg: " + msg);
                     if (!mMsgidMap.containsKey(msgId)) {
                         mMsgidMap.put(msgId, msgId);
                         if (!TextUtils.isEmpty(msg)) {
@@ -525,8 +524,18 @@ public class PushService extends Service {
 
     private void handleFriendApplyMsg(FriendApplyInfo applyInfo) {
         FriendApplyDao friendApplyDao = FriendApplyDao.getInstance(this);
+        FriendApplyInfo friendApplyInfo = friendApplyDao.query(applyInfo.userAccount,
+                SharedPreferencesInfo.getTagString(this, SharedPreferencesInfo.ACCOUNT));
         applyInfo.readStatus = "0";
         applyInfo.replyStatus = "0";
+        if (friendApplyInfo != null && !TextUtils.isEmpty(friendApplyInfo.content)) {
+            String[] temp = friendApplyInfo.content.split("\n");
+            if (temp.length >= 3) {
+                applyInfo.content = temp[1] + "\n" + temp[2] + "\n" + applyInfo.content;
+            } else {
+                applyInfo.content = friendApplyInfo.content + "\n" + applyInfo.content;
+            }
+        }
         friendApplyDao.insert(applyInfo, SharedPreferencesInfo.getTagString(PushService.this, SharedPreferencesInfo.ACCOUNT));
 
         SharedPreferencesInfo.setTagBoolean(this, SharedPreferencesInfo.MSG_FRIEND_APPLY, true);
@@ -551,18 +560,15 @@ public class PushService extends Service {
         ContactDao contactDao = ContactDao.getInstance(this);
         UserInfo userInfo = contactDao.queryUser(chatMsgInfo.userAccount);
         if (userInfo == null || TextUtils.isEmpty(userInfo.remark) || TextUtils.isEmpty(userInfo.nickname)) {
-            getFriendInfo(chatMsgInfo.userAccount, chatMsgInfo, category);
+            getFriendInfo(chatMsgInfo.userAccount, chatMsgInfo, category, title);
         } else {
-            if (!TextUtils.isEmpty(userInfo.remark)) {
-                chatMsgInfo.position = userInfo.remark;
-            } else {
-                chatMsgInfo.position = userInfo.nickname;
-            }
             //显示通知
-            if (!TextUtils.isEmpty(userInfo.remark)) {
-                title = userInfo.remark;
-            } else if (!TextUtils.isEmpty(userInfo.nickname)) {
-                title = userInfo.nickname;
+            if ("1".equals(category)) {
+                if (!TextUtils.isEmpty(userInfo.remark)) {
+                    title = userInfo.remark;
+                } else if (!TextUtils.isEmpty(userInfo.nickname)) {
+                    title = userInfo.nickname;
+                }
             }
             sendNotifyMessage(title, chatMsgInfo, category);
         }
@@ -572,11 +578,6 @@ public class PushService extends Service {
             friendsDao.insert(chatMsgInfo.userAccount, SharedPreferencesInfo.getTagString(PushService.this, SharedPreferencesInfo.ACCOUNT));
         }
         if (chatMsgInfo.type.equals("0")) { //文字瓶子
-            //保存到消息记录表
-            ChatMsgDao chatMsgDao = ChatMsgDao.getInstance(this);
-            chatMsgInfo.receiveAccount = SharedPreferencesInfo.getTagString(PushService.this, SharedPreferencesInfo.ACCOUNT);
-            chatMsgDao.saveChatMsgItem(chatMsgInfo);
-
             if (SharedPreferencesInfo.getTagString(PushService.this, SharedPreferencesInfo.ACCOUNT)
                     .equals(chatMsgInfo.userAccount)) {
                 return;
@@ -584,9 +585,14 @@ public class PushService extends Service {
 
             //更新消息列表
             updateMsg(chatMsgInfo, category);
+            //保存到消息记录表
+            ChatMsgDao chatMsgDao = ChatMsgDao.getInstance(this);
+            chatMsgInfo.receiveAccount = SharedPreferencesInfo.getTagString(PushService.this, SharedPreferencesInfo.ACCOUNT);
             if ("0".equals(category)) {
+                chatMsgDao.saveChatMsgItem(chatMsgInfo, "bottle");
                 sendBroadcast(AppConstants.PUSH_BOTTLE); //消息列表界面和聊天界面需要监听广播
             } else if ("1".equals(category)) {
+                chatMsgDao.saveChatMsgItem(chatMsgInfo, "friend");
                 sendBroadcast(AppConstants.PUSH_CHAT);
             }
         } else { //语音图片瓶子
@@ -642,11 +648,6 @@ public class PushService extends Service {
                     }
                     fos.flush();
 
-                    //保存到消息记录表
-                    ChatMsgDao chatMsgDao = ChatMsgDao.getInstance(PushService.this);
-                    chatMsgInfo.receiveAccount = SharedPreferencesInfo.getTagString(PushService.this, SharedPreferencesInfo.ACCOUNT);
-                    chatMsgDao.saveChatMsgItem(chatMsgInfo);
-
                     if (SharedPreferencesInfo.getTagString(PushService.this, SharedPreferencesInfo.ACCOUNT)
                             .equals(chatMsgInfo.userAccount)) {
                         return;
@@ -654,9 +655,15 @@ public class PushService extends Service {
 
                     //更新消息列表
                     updateMsg(chatMsgInfo, category);
+                    //保存到消息记录表
+                    ChatMsgDao chatMsgDao = ChatMsgDao.getInstance(PushService.this);
+                    chatMsgInfo.receiveAccount = SharedPreferencesInfo.getTagString(PushService.this, SharedPreferencesInfo.ACCOUNT);
                     if ("0".equals(category)) {
+                        chatMsgDao.saveChatMsgItem(chatMsgInfo, "bottle");
                         sendBroadcast(AppConstants.PUSH_BOTTLE); //消息列表界面和聊天界面需要监听广播
                     } else if ("1".equals(category)) {
+                        //保存到消息记录表
+                        chatMsgDao.saveChatMsgItem(chatMsgInfo, "friend");
                         sendBroadcast(AppConstants.PUSH_CHAT);
                     }
                 } catch (Exception e) {
@@ -693,7 +700,7 @@ public class PushService extends Service {
      *
      * @param userAccount
      */
-    private void getFriendInfo(final String userAccount, final ChatMsgInfo chatMsgInfo, final String category) {
+    private void getFriendInfo(final String userAccount, final ChatMsgInfo chatMsgInfo, final String category, final String title) {
         final GetFriendInfoRequestBody requestBody = new GetFriendInfoRequestBody();
         requestBody.friendAccount = userAccount;
         WebServiceIf.IResponseCallback getFriendInfoCallbackIf = new WebServiceIf.IResponseCallback() {
@@ -708,13 +715,17 @@ public class PushService extends Service {
                             UserInfo userInfo = responseObj.body;
                             userInfo.userAccount = userAccount;
 
-                            String title = "";
-                            if (!TextUtils.isEmpty(userInfo.remark)) {
-                                title = userInfo.remark;
-                            } else if (!TextUtils.isEmpty(userInfo.nickname)) {
-                                title = userInfo.nickname;
+                            String tempTitle = "";
+                            if ("1".equals(category)) {
+                                if (!TextUtils.isEmpty(userInfo.remark)) {
+                                    tempTitle = userInfo.remark;
+                                } else if (!TextUtils.isEmpty(userInfo.nickname)) {
+                                    tempTitle = userInfo.nickname;
+                                }
+                                sendNotifyMessage(tempTitle, chatMsgInfo, category);
+                            } else {
+                                sendNotifyMessage(title, chatMsgInfo, category);
                             }
-                            sendNotifyMessage(title, chatMsgInfo, category);
                             if ("0".equals(category)) {
                                 sendBroadcast(AppConstants.PUSH_BOTTLE); //消息列表界面和聊天界面需要监听广播
                             } else if ("1".equals(category)) {

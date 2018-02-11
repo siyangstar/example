@@ -82,6 +82,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
+                            android:maxLength="20"
                             android:hint="请输入你的昵称"
                             android:textColor="@color/text1"
                             android:textSize="14sp" />

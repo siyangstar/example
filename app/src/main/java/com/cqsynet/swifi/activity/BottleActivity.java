@@ -202,7 +202,7 @@ public class BottleActivity extends HkActivity implements OnClickListener, Senso
                     ChatMsgInfo chatMsgInfo = (ChatMsgInfo) msg.obj;
                     //保存到消息记录表
                     ChatMsgDao chatMsgDao = ChatMsgDao.getInstance(BottleActivity.this);
-                    chatMsgDao.saveChatMsgItem(chatMsgInfo);
+                    chatMsgDao.saveChatMsgItem(chatMsgInfo, "bottle");
                     //更新消息列表
                     BottleListDao bottleListDao = BottleListDao.getInstance(BottleActivity.this);
                     mChatItem = new ChatListItemInfo();
@@ -680,7 +680,7 @@ public class BottleActivity extends HkActivity implements OnClickListener, Senso
                                 mIvBottle.setImageResource(R.drawable.bottle);//漂流瓶文字图标
                                 //保存到消息记录表
                                 ChatMsgDao chatMsgDao = ChatMsgDao.getInstance(BottleActivity.this);
-                                chatMsgDao.saveChatMsgItem(body.bottle);
+                                chatMsgDao.saveChatMsgItem(body.bottle, "bottle");
                                 //更新消息列表
                                 BottleListDao bottleListDao = BottleListDao.getInstance(BottleActivity.this);
                                 mChatItem = new ChatListItemInfo();
@@ -1398,7 +1398,7 @@ public class BottleActivity extends HkActivity implements OnClickListener, Senso
     private void refreshRedPoint() {
         //设置红点未读数量
         ChatMsgDao chatMsgDao = ChatMsgDao.getInstance(BottleActivity.this);
-        int count = chatMsgDao.queryUnReadMsgCount("");
+        int count = chatMsgDao.queryUnReadMsgCount("", "bottle");
         if (count < 100) {
             mTvRedPoint.setText(count + "");
         } else {

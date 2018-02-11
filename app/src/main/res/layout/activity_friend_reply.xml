@@ -95,19 +95,39 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_remark"
+    <LinearLayout
+        android:id="@+id/ll_remark"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@color/white"
-        android:drawableRight="@drawable/more"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:text="备注"
-        android:textColor="@color/text1"
-        android:textSize="16sp" />
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="设置备注"
+            android:textColor="@color/text1"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_remark"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:textColor="@color/text3"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/more" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_message"
@@ -115,9 +135,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@color/white"
+        android:lineSpacingExtra="10dp"
         android:minHeight="80dp"
         android:padding="16dp"
-        android:text="初次见面，请多指教"
         android:textColor="@color/text2"
         android:textSize="14sp" />
 
@@ -146,6 +166,16 @@
         android:text="拒绝"
         android:textColor="@color/text2"
         android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="已同意"
+        android:textColor="@color/text3"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"

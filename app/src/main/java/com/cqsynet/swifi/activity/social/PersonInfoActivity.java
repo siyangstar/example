@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.cqsynet.swifi.AppConstants;
 import com.cqsynet.swifi.GlideApp;
-import com.cqsynet.swifi.Globals;
 import com.cqsynet.swifi.R;
 import com.cqsynet.swifi.activity.ChatActivity;
 import com.cqsynet.swifi.activity.HkActivity;
@@ -111,6 +110,8 @@ public class PersonInfoActivity extends HkActivity implements View.OnClickListen
         mPerson = getIntent().getParcelableExtra("person");
 
         if (mPerson != null) {
+            mFriendAccount = mPerson.userAccount;
+            mIsFriend = mPerson.isFriend;
             updatePersonInfo();
         } else {
             mPerson = new FindPersonInfo();
@@ -163,7 +164,7 @@ public class PersonInfoActivity extends HkActivity implements View.OnClickListen
         }
         if (!TextUtils.isEmpty(mPerson.areaCode)) {
             RegionDao regionDao = new RegionDao(this);
-            List<RegionDao.KeyValue> data = regionDao.getRegionByCode(Globals.g_userInfo.areaCode);
+            List<RegionDao.KeyValue> data = regionDao.getRegionByCode(mPerson.areaCode);
             StringBuilder addr = new StringBuilder();
             for (RegionDao.KeyValue kv : data) {
                 if (kv.key.length() == 2) {
@@ -352,8 +353,17 @@ public class PersonInfoActivity extends HkActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == MODIFY_REMARK_REQUEST) {
-                mTvName.setText(data.getStringExtra("remark"));
-                mTvRemark.setText(data.getStringExtra("remark"));
+                String remark = data.getStringExtra("remark");
+                if (!TextUtils.isEmpty(remark)) {
+                    mTvName.setText(remark);
+                    if (!TextUtils.isEmpty(mPerson.nickname)) {
+                        mTvNickname.setText("昵称：" + mPerson.nickname);
+                    }
+                } else {
+                    mTvName.setText(mPerson.nickname);
+                    mTvNickname.setVisibility(View.GONE);
+                }
+                mTvRemark.setText(remark);
             }
         }
     }

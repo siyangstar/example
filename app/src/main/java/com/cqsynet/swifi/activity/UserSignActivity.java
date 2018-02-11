@@ -17,14 +17,16 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cqsynet.swifi.R;
-import com.cqsynet.swifi.view.TitleBar;
 
-public class UserSignActivity extends HkActivity implements OnClickListener {
+public class UserSignActivity extends HkActivity {
 
-    private TitleBar mTitleBar;
+    private ImageView mIvBack;
+    private TextView mTvTitle;
+    private TextView mTvSave;
     private EditText mEtContent;
     private TextView mTvCount;
     private String mTitleStr;
@@ -38,9 +40,28 @@ public class UserSignActivity extends HkActivity implements OnClickListener {
         mTitleStr = getIntent().getStringExtra("title");
         mValueStr = getIntent().getStringExtra("value");
         setContentView(R.layout.activity_user_sign);
-        mTitleBar = findViewById(R.id.titlebar_activity_user_sign);
-        mTitleBar.setTitle(mTitleStr);
-        mTitleBar.setLeftIconClickListener(this);
+        mIvBack = findViewById(R.id.iv_back);
+        mIvBack.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("data", mEtContent.getText().toString().trim());
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+        });
+        mTvTitle = findViewById(R.id.tv_title);
+        mTvTitle.setText(mTitleStr);
+        mTvSave = findViewById(R.id.tv_save);
+        mTvSave.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("data", mEtContent.getText().toString().trim());
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+        });
         mTvCount = findViewById(R.id.tvCount_activity_user_sign);
         mEtContent = findViewById(R.id.etContent_activity_user_sign);
         mEtContent.addTextChangedListener(new TextWatcher() {
@@ -62,16 +83,6 @@ public class UserSignActivity extends HkActivity implements OnClickListener {
         });
         mEtContent.setText(mValueStr);
         mEtContent.setSelection(mEtContent.getText().length());
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.ivBack_titlebar_layout) { // 返回
-            Intent intent = new Intent();
-            intent.putExtra("data", mEtContent.getText().toString().trim());
-            setResult(Activity.RESULT_OK, intent);
-            finish();
-        }
     }
 
     @Override

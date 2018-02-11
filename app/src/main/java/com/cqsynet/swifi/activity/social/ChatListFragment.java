@@ -92,7 +92,7 @@ public class ChatListFragment extends Fragment implements
                 bottleChat.userAccount = chatListItemInfo.userAccount;
                 bottleChat.updateTime = chatListItemInfo.updateTime;
                 bottleChat.draft = chatListItemInfo.draft;
-                bottleChat.itemType = "我的瓶子";
+                bottleChat.itemType = "MyBottle";
                 mChatList.add(bottleChat);
             }
         }
@@ -111,7 +111,7 @@ public class ChatListFragment extends Fragment implements
                 friendApplyChat.userAccount = friendApplyInfo.userAccount;
                 friendApplyChat.updateTime = friendApplyInfo.date;
                 friendApplyChat.draft = "";
-                friendApplyChat.itemType = "好友申请";
+                friendApplyChat.itemType = "FriendApply";
                 mChatList.add(friendApplyChat);
             }
         }
@@ -129,6 +129,7 @@ public class ChatListFragment extends Fragment implements
                         chat.position = userInfo.nickname;
                     }
                 }
+                chat.itemType = "FriendChat";
             }
             mChatList.addAll(chatListItemInfos);
         }
@@ -161,10 +162,10 @@ public class ChatListFragment extends Fragment implements
             startActivity(new Intent(getActivity(), ChatSearchActivity.class));
         } else {
             ChatListItemInfo chatListItemInfo = mChatList.get(position - 1);
-            if ("我的瓶子".equals(chatListItemInfo.itemType)) {
+            if ("MyBottle".equals(chatListItemInfo.itemType)) {
                 Intent bottle = new Intent(getActivity(), MyBottleActivity.class);
                 startActivity(bottle);
-            } else if ("好友申请".equals(chatListItemInfo.itemType)) {
+            } else if ("FriendApply".equals(chatListItemInfo.itemType)) {
                 Intent friendApply = new Intent(getActivity(), FriendApplyListActivity.class);
                 startActivity(friendApply);
             } else {
@@ -182,9 +183,9 @@ public class ChatListFragment extends Fragment implements
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         if (position > 0) {
             ChatListItemInfo chatListItemInfo = mChatList.get(position - 1);
-            if ("我的瓶子".equals(chatListItemInfo.itemType)) {
+            if ("MyBottle".equals(chatListItemInfo.itemType)) {
                 showDeleteBottleDialog(chatListItemInfo);
-            } else if ("好友申请".equals(chatListItemInfo.itemType)) {
+            } else if ("FriendApply".equals(chatListItemInfo.itemType)) {
                 showDeleteFriendApplyDialog(chatListItemInfo);
             } else {
                 showDeleteMsgDialog(chatListItemInfo);

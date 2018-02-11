@@ -14,13 +14,9 @@ package com.cqsynet.swifi.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cqsynet.swifi.AppConstants;
@@ -42,7 +38,6 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,22 +66,7 @@ public class UserCenterActivity extends HkActivity {
     private static final int REQUEST_CODE_AGE = 30007;
     private static final int REQUEST_CODE_SEX = 30008;
 
-    private Spinner mSpYear;
-    private Spinner mSpMonth;
-    private Spinner mSpDay;
-    private View mView;
-    private RadioButton mMan;
-    private RadioButton mWoman;
-    private RadioButton mUnknow;
-    private int mDay = 1;
-    private ArrayList<String> mDataYear = new ArrayList<String>();
-    private ArrayList<String> mDataMonth = new ArrayList<String>();
-    private ArrayList<String> mDataDay = new ArrayList<String>();
-    private ArrayAdapter<String> mAdapterSpYear;
-    private ArrayAdapter<String> mAdapterSpMonth;
-    private ArrayAdapter<String> mAdapterSpDay;
     private boolean mCanChooseHead = true;//是否能点击选择头像，避免多次点击打开多个图像选择activity
-    private CustomDialog mDialog;
 
     private boolean mIsRefreshHeader = false; //返回发现页面时是否需要刷新头像
     private String mHeadImagePath; //头像路径
@@ -148,7 +128,7 @@ public class UserCenterActivity extends HkActivity {
             intent.putExtra("value", mTvNick.getText().toString());
             startActivityForResult(intent, REQUEST_CODE_NICKNAME);
         } else if (v.getId() == R.id.llRemark_usercenter) { // 个性签名
-            Intent intent = new Intent(this, UserCenterInputActivity.class);
+            Intent intent = new Intent(this, UserSignActivity.class);
             intent.putExtra("title", "个性签名");
             intent.putExtra("value", mTvSign.getText().toString());
             startActivityForResult(intent, REQUEST_CODE_SIGN);
@@ -323,7 +303,6 @@ public class UserCenterActivity extends HkActivity {
             public void onResponse(String response) throws JSONException {
                 dismissProgressDialog();
                 if (response != null) {
-                    Log.i("UserCenterActivity", "@@@#@@response: " + response);
                     BaseResponseObject responseObj = new Gson().fromJson(response, BaseResponseObject.class);
                     if (responseObj.header != null) {
                         if (AppConstants.RET_OK.equals(responseObj.header.ret)) {
@@ -455,7 +434,8 @@ public class UserCenterActivity extends HkActivity {
                         GlideApp.with(this)
                                 .load(mHeadImagePath)
                                 .centerCrop()
-                                .error(R.drawable.icon_profile_default)
+                                .circleCrop()
+                                .error(R.drawable.icon_profile_default_round)
                                 .into(mIvHead);
                     }
                 }

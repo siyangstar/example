@@ -6,11 +6,43 @@
               android:background="@color/bg_grey"
               android:orientation="vertical">
 
-    <com.cqsynet.swifi.view.TitleBar
-        android:id="@+id/titlebar_activity_user_sign"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        titlebar:showLeftIcon="true"/>
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@null"
+            android:scaleType="center"
+            android:src="@drawable/btn_back_green_selector" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/text1"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_save"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:text="保存"
+            android:textColor="@color/green"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_gravity="bottom"
+            android:background="@color/line" />
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"

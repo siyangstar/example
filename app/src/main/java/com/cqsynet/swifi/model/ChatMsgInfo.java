@@ -24,4 +24,5 @@ public class ChatMsgInfo extends RequestBody implements Serializable {
 	public int readStatus = 0; //阅读状态 0:未读 1:已读
 	public String position; //对方位置
 	public String owner; //该消息记录属于的账号(防止切换账号后出现聊天信息重复异常)
+	public String category; //消息分类：好友；漂流瓶
 }

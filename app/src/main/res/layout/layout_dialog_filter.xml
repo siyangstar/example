@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_grey"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
@@ -41,10 +40,10 @@
                 android:layout_height="40dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_green_radius_selector"
+                android:background="@drawable/bg_gray_wireframe"
                 android:gravity="center"
                 android:text="不限"
-                android:textColor="@color/white" />
+                android:textColor="@color/text2" />
 
             <LinearLayout
                 android:id="@+id/ll_male"
@@ -130,10 +129,10 @@
                 android:layout_height="40dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_green_radius_selector"
+                android:background="@drawable/bg_gray_wireframe"
                 android:gravity="center"
                 android:text="不限"
-                android:textColor="@color/white" />
+                android:textColor="@color/text2" />
 
             <TextView
                 android:id="@+id/tv_lower_18"
@@ -197,7 +196,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_gray_wireframe"
                 android:gravity="center"
-                android:text="40以上"
+                android:text="40岁以上"
                 android:textColor="@color/text2" />
         </LinearLayout>
     </LinearLayout>

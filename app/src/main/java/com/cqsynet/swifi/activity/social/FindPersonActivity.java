@@ -134,6 +134,7 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
                 if (mHasMore) {
                     mAction = ACTION_LOAD_MORE;
                     findPerson(ACTION_LOAD_MORE);
+                    mLoadingBar.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -146,6 +147,7 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
             public void onClick(View v) {
                 mAction = ACTION_REFRESH;
                 findPerson(ACTION_REFRESH);
+                mLoadingBar.setVisibility(View.VISIBLE);
             }
         });
         mIvHint = findViewById(R.id.iv_hint);
@@ -156,6 +158,7 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
 
         mType = getIntent().getStringExtra("type");
         findPerson(ACTION_REFRESH);
+        mLoadingBar.setVisibility(View.VISIBLE);
 
         mTvCategory.setText(mFindCategoryArray[Integer.parseInt(mType)]);
     }
@@ -179,24 +182,28 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
                 mTvCategory.setText(mFindCategoryArray[0]);
                 mType = TYPE_TRAIN;
                 findPerson(ACTION_REFRESH);
+                mLoadingBar.setVisibility(View.VISIBLE);
                 closeCategoryLayout();
                 break;
             case R.id.tv_station:
                 mTvCategory.setText(mFindCategoryArray[1]);
                 mType = TYPE_STATION;
                 findPerson(ACTION_REFRESH);
+                mLoadingBar.setVisibility(View.VISIBLE);
                 closeCategoryLayout();
                 break;
             case R.id.tv_line:
                 mTvCategory.setText(mFindCategoryArray[2]);
                 mType = TYPE_LINE;
                 findPerson(ACTION_REFRESH);
+                mLoadingBar.setVisibility(View.VISIBLE);
                 closeCategoryLayout();
                 break;
             case R.id.tv_nearby:
                 mTvCategory.setText(mFindCategoryArray[3]);
                 mType = TYPE_NEARBY;
                 findPerson(ACTION_REFRESH);
+                mLoadingBar.setVisibility(View.VISIBLE);
                 closeCategoryLayout();
                 break;
             case R.id.iv_close:
@@ -249,8 +256,6 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
                 break;
         }
 
-        mLoadingBar.setVisibility(View.VISIBLE);
-
         FindPersonRequestBody body = new FindPersonRequestBody();
         body.type = mType;
         body.age = mAge;
@@ -273,6 +278,14 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
                         } else {
                             loadMorePerson(object.body);
                         }
+                    } else if ("36162".equals(header.errCode)) {
+                        mLlHint.setVisibility(View.VISIBLE);
+                        mIvHint.setImageResource(R.drawable.ic_in_train);
+                        mTvHint.setText(R.string.social_in_train);
+                    } else if ("36163".equals(header.errCode)) {
+                        mLlHint.setVisibility(View.VISIBLE);
+                        mIvHint.setImageResource(R.drawable.ic_out_train);
+                        mTvHint.setText(R.string.social_out_train);
                     }
                 }
             }
@@ -367,13 +380,14 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
                         mSex = sex;
                         mAge = age;
                         findPerson(ACTION_REFRESH);
+                        mLoadingBar.setVisibility(View.VISIBLE);
                         break;
                     case R.id.tv_cancel:
                         mFilterDialog.dismiss();
                         break;
                 }
             }
-        });
+        }, mAge, mSex);
         mFilterDialog.show();
     }
 
