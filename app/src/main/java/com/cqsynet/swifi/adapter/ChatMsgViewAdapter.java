@@ -292,6 +292,7 @@ public class ChatMsgViewAdapter extends BaseAdapter {
                             friendIntent.setClass(mContext, PersonInfoActivity.class);
                             friendIntent.putExtra("friendAccount", chatMsgInfo.userAccount);
                             friendIntent.putExtra("isFriend", mCategory);
+                            friendIntent.putExtra("category", mCategory);
                             mContext.startActivity(friendIntent);
                         }
                     }

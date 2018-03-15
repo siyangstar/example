@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：社交主界面
+ *
+ *
+ * 创建标识：sayaki 20171123
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.content.Intent;
@@ -28,9 +37,12 @@ public class SocialActivity extends BasicFragmentActivity {
     private TextView mTvTitle;
     private NoSlidingViewPager mViewPager;
     private ImageView mIvMessage;
+    private TextView mTvMessage;
     private TextView mTvMsgHint;
     private ImageView mIvFindPerson;
+    private TextView mTvFindPerson;
     private ImageView mIvFriends;
+    private TextView mTvFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +58,8 @@ public class SocialActivity extends BasicFragmentActivity {
                 finish();
             }
         });
-        ImageView ivMine = findViewById(R.id.iv_mine);
-        ivMine.setOnClickListener(new View.OnClickListener() {
+        TextView tvModify = findViewById(R.id.tv_modify);
+        tvModify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SocialActivity.this, UserCenterActivity.class);
@@ -68,19 +80,25 @@ public class SocialActivity extends BasicFragmentActivity {
 
         FrameLayout flMessage = findViewById(R.id.fl_message);
         mIvMessage = findViewById(R.id.iv_message);
+        mTvMessage = findViewById(R.id.tv_message);
         mTvMsgHint = findViewById(R.id.tv_msg_hint);
         LinearLayout llFindPerson = findViewById(R.id.ll_find_person);
         mIvFindPerson = findViewById(R.id.iv_find_person);
+        mTvFindPerson = findViewById(R.id.tv_find_person);
         LinearLayout llFriends = findViewById(R.id.ll_friends);
         mIvFriends = findViewById(R.id.iv_friends);
+        mTvFriends = findViewById(R.id.tv_friends);
 
         flMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mTvTitle.setText("消息");
                 mIvMessage.setImageResource(R.drawable.ic_social_msg_green);
+                mTvMessage.setTextColor(getResources().getColor(R.color.green));
                 mIvFindPerson.setImageResource(R.drawable.ic_social_find_gray);
+                mTvFindPerson.setTextColor(getResources().getColor(R.color.text3));
                 mIvFriends.setImageResource(R.drawable.ic_social_friend_gray);
+                mTvFriends.setTextColor(getResources().getColor(R.color.text3));
                 mViewPager.setCurrentItem(0, false);
             }
         });
@@ -89,8 +107,11 @@ public class SocialActivity extends BasicFragmentActivity {
             public void onClick(View v) {
                 mTvTitle.setText("找人");
                 mIvMessage.setImageResource(R.drawable.ic_social_msg_gray);
+                mTvMessage.setTextColor(getResources().getColor(R.color.text3));
                 mIvFindPerson.setImageResource(R.drawable.ic_social_find_green);
+                mTvFindPerson.setTextColor(getResources().getColor(R.color.green));
                 mIvFriends.setImageResource(R.drawable.ic_social_friend_gray);
+                mTvFriends.setTextColor(getResources().getColor(R.color.text3));
                 mViewPager.setCurrentItem(1, false);
             }
         });
@@ -99,8 +120,11 @@ public class SocialActivity extends BasicFragmentActivity {
             public void onClick(View v) {
                 mTvTitle.setText("好友");
                 mIvMessage.setImageResource(R.drawable.ic_social_msg_gray);
+                mTvMessage.setTextColor(getResources().getColor(R.color.text3));
                 mIvFindPerson.setImageResource(R.drawable.ic_social_find_gray);
+                mTvFindPerson.setTextColor(getResources().getColor(R.color.text3));
                 mIvFriends.setImageResource(R.drawable.ic_social_friend_green);
+                mTvFriends.setTextColor(getResources().getColor(R.color.green));
                 mViewPager.setCurrentItem(2, false);
             }
         });

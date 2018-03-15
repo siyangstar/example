@@ -10,9 +10,12 @@
 package com.cqsynet.swifi.model;
 
 import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 
 import com.cqsynet.swifi.util.AppUtil;
+import com.cqsynet.swifi.util.NetworkUtil;
 import com.cqsynet.swifi.util.SharedPreferencesInfo;
 
 public class RequestHeader {
@@ -28,6 +31,8 @@ public class RequestHeader {
 	public String resolution;
 	public String longitude; //经度
 	public String latitude; //纬度
+	public String ssid;
+	public String bssid;
 
 	public static synchronized RequestHeader initHeader(Context context) {
 		if (mRequestHead == null) {
@@ -59,6 +64,16 @@ public class RequestHeader {
 		}
 		if(TextUtils.isEmpty(mRequestHead.resolution)) {
 			mRequestHead.resolution = "720*1280";
+		}
+		mRequestHead.ssid = "";
+		mRequestHead.bssid = "";
+		WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(context.WIFI_SERVICE);
+		if(wifiManager.isWifiEnabled()) {
+			WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+			if(wifiInfo != null) {
+				mRequestHead.ssid = NetworkUtil.formatSSID(wifiInfo.getSSID());
+				mRequestHead.bssid = wifiInfo.getBSSID();
+			}
 		}
 		return mRequestHead;
 	}

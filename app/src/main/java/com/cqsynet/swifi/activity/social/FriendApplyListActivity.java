@@ -1,7 +1,19 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：好友申请列表界面
+ *
+ *
+ * 创建标识：sayaki 20180104
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +36,7 @@ import com.cqsynet.swifi.model.ReplyFriendRequestBody;
 import com.cqsynet.swifi.model.UserInfo;
 import com.cqsynet.swifi.network.WebServiceIf;
 import com.cqsynet.swifi.util.SharedPreferencesInfo;
+import com.cqsynet.swifi.util.ToastUtil;
 import com.cqsynet.swifi.view.DeleteDialog;
 
 import org.json.JSONException;
@@ -50,9 +63,13 @@ public class FriendApplyListActivity extends HkActivity implements
     private DeleteDialog mDeleteDialog;
 
     private FriendApplyAdapter mAdapter;
+    // 全部的好友申请列表
     private List<FriendApplyInfo> mFriendApplyInfos = new ArrayList<>();
+    // 选中的好友申请列表
     private List<FriendApplyInfo> mSelectedFriendApplyInfos = new ArrayList<>();
+    // 是否是多选模式
     private boolean isMultiMode;
+    private MessageReceiver mMessageReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,11 +139,25 @@ public class FriendApplyListActivity extends HkActivity implements
         mFriendApplyInfos.addAll(friendApplyDao.queryList(SharedPreferencesInfo.getTagString(this, SharedPreferencesInfo.ACCOUNT)));
         mAdapter.notifyDataSetChanged();
 
+        updateHint();
+
         for (FriendApplyInfo friendApplyInfo : mFriendApplyInfos) {
             friendApplyInfo.readStatus = "1";
             friendApplyDao.insert(friendApplyInfo, SharedPreferencesInfo.getTagString(this, SharedPreferencesInfo.ACCOUNT));
         }
         sendBroadcast(new Intent(AppConstants.ACTION_UPDATE_MSG));
+
+        mMessageReceiver = new MessageReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AppConstants.ACTION_SOCKET_PUSH);
+        filter.addAction(AppConstants.ACTION_MODIFY_REMARK);
+        registerReceiver(mMessageReceiver, filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mMessageReceiver);
     }
 
     @Override
@@ -157,6 +188,7 @@ public class FriendApplyListActivity extends HkActivity implements
             @Override
             public void onResponse(String response) throws JSONException {
                 Log.i("FriendApplyListActivity", "@@@#@response: " + response);
+                // 将好友信息插入到联系人表中
                 UserInfo userInfo = new UserInfo();
                 userInfo.userAccount = mFriendApplyInfos.get(position).userAccount;
                 userInfo.nickname = mFriendApplyInfos.get(position).nickname;
@@ -167,6 +199,7 @@ public class FriendApplyListActivity extends HkActivity implements
                 ContactDao contactDao = ContactDao.getInstance(FriendApplyListActivity.this);
                 contactDao.saveUser(userInfo);
 
+                // 在好友表中插入一条新的数据
                 FriendsDao friendsDao = FriendsDao.getInstance(FriendApplyListActivity.this);
                 FriendsInfo friendsInfo = friendsDao.query(mFriendApplyInfos.get(position).userAccount,
                         SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT));
@@ -174,6 +207,8 @@ public class FriendApplyListActivity extends HkActivity implements
                     friendsDao.insert(mFriendApplyInfos.get(position).userAccount,
                             SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT));
                 }
+
+                // 修改好友申请表的数据
                 FriendApplyDao friendApplyDao = FriendApplyDao.getInstance(FriendApplyListActivity.this);
                 FriendApplyInfo friendApplyInfo = friendApplyDao.query(mFriendApplyInfos.get(position).userAccount,
                         SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT));
@@ -189,7 +224,7 @@ public class FriendApplyListActivity extends HkActivity implements
 
             @Override
             public void onErrorResponse() {
-
+                ToastUtil.showToast(FriendApplyListActivity.this, R.string.social_add_friend_failed);
             }
         };
         WebServiceIf.replyFriendRequest(this, body, callback);
@@ -247,8 +282,10 @@ public class FriendApplyListActivity extends HkActivity implements
     private void updateHint() {
         if (mFriendApplyInfos.size() > 0) {
             mLlHint.setVisibility(View.GONE);
+            mTvEdit.setVisibility(View.VISIBLE);
         } else {
             mLlHint.setVisibility(View.VISIBLE);
+            mTvEdit.setVisibility(View.GONE);
         }
     }
 
@@ -266,5 +303,28 @@ public class FriendApplyListActivity extends HkActivity implements
                 }
             }
         }
+    }
+
+    private class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (AppConstants.ACTION_SOCKET_PUSH.equals(action)) {
+                String type = intent.getStringExtra("type");
+                if (AppConstants.PUSH_FRIEND_APPLY.equals(type)) {
+                    updateFriendApply();
+                }
+            } else if (AppConstants.ACTION_MODIFY_REMARK.equals(action)) {
+                updateFriendApply();
+            }
+        }
+    }
+
+    private void updateFriendApply() {
+        mFriendApplyInfos.clear();
+        FriendApplyDao friendApplyDao = FriendApplyDao.getInstance(FriendApplyListActivity.this);
+        mFriendApplyInfos.addAll(friendApplyDao.queryList(SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT)));
+        mAdapter.notifyDataSetChanged();
+        updateHint();
     }
 }

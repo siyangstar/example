@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：找人主界面
+ *
+ *
+ * 创建标识：sayaki 20171123
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.content.Intent;

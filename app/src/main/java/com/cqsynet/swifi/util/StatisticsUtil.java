@@ -118,7 +118,7 @@ public class StatisticsUtil {
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
         long firstime = SystemClock.elapsedRealtime(); //开始时间
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstime, AppConstants.SUBMIT_STATISTICS_INTEVAL, pi); //每隔5分钟发送广播
+        am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, firstime, AppConstants.SUBMIT_STATISTICS_INTEVAL, pi); //每隔2分钟发送广播
     }
 	
 	/**

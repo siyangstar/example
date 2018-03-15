@@ -61,19 +61,36 @@
         android:text="备注"
         android:textColor="@color/text2" />
 
-    <EditText
-        android:id="@+id/et_remark"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:hint="添加备注"
-        android:maxLength="20"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:textColor="@color/text2"
-        android:textSize="14sp" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <EditText
+            android:id="@+id/et_remark"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:hint="添加备注"
+            android:maxLength="20"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:singleLine="true"
+            android:textColor="@color/text2"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:contentDescription="@null"
+            android:src="@drawable/close_x"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tv_confirm"

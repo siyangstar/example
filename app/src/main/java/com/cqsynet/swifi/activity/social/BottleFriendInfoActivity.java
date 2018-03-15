@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：漂流瓶的好友界面
+ *
+ *
+ * 创建标识：sayaki 20180210
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.content.Intent;
@@ -25,7 +34,7 @@ import com.cqsynet.swifi.util.ToastUtil;
 import com.google.gson.Gson;
 
 /**
- * Author: Arturia
+ * Author: sayaki
  * Date: 2018/2/10
  */
 public class BottleFriendInfoActivity extends HkActivity {

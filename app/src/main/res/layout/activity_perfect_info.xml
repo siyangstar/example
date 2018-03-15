@@ -16,7 +16,15 @@
             android:layout_height="48dp"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/btn_back_green_selector" />
+            android:src="@drawable/ic_black_back_selector" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="完善资料"
+            android:textColor="@color/text1"
+            android:textSize="16sp" />
 
         <View
             android:layout_width="match_parent"

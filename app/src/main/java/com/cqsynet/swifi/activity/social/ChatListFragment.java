@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：聊天列表界面
+ *
+ *
+ * 创建标识：sayaki 20171123
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.content.BroadcastReceiver;
@@ -47,7 +56,7 @@ public class ChatListFragment extends Fragment implements
 
     private ChatListAdapter mAdapter;
     private List<ChatListItemInfo> mChatList = new ArrayList<>();
-    private MessageReceiver mMessageReceiver; //监听推送消息
+    private MessageReceiver mMessageReceiver; // 监听推送消息
 
     @Nullable
     @Override
@@ -76,6 +85,9 @@ public class ChatListFragment extends Fragment implements
         return view;
     }
 
+    /**
+     * 构造聊天列表数据
+     */
     private void updateChatList() {
         mChatList.clear();
         if (SharedPreferencesInfo.getTagBoolean(getActivity(), SharedPreferencesInfo.MSG_BOTTLE, true)) {

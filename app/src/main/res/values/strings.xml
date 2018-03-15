@@ -166,10 +166,12 @@
     <string name="social_in_train">你好像还在列车上</string>
     <string name="social_out_train">你好像还没有登上列车</string>
     <string name="social_no_wifi">要连接嘿快轨道WiFi才能使用本功能哦</string>
-    <string name="social_no_location">无法获取你的位置信息，请检查网络后重新进入本功能</string>
-    <string name="social_change_posture">可能TA们比较害羞，点击这里换个姿势</string>
-    <string name="social_no_person">没有找到符合标准的人</string>
+    <string name="social_no_location_1">无法获取你的位置信息</string>
+    <string name="social_no_location_2">请确认网络正常连接再后重新进入本功能</string>
+    <string name="social_change_posture">可能TA们比较害羞，换个姿势找找看</string>
+    <string name="social_no_person">没有找到符合标准的人哟</string>
     <string name="social_refresh">点击空白处刷新试试</string>
+    <string name="social_filter_hint">修改一下你的筛选标准吧</string>
     <string name="social_delete_bottle">从消息列表中删除漂流瓶，不会删除漂流瓶的聊天记录</string>
     <string name="social_delete_friends_apply">从消息列表中删除好友申请，不会删除好友申请记录</string>
     <string name="social_delete_chat_msg">删除后，将清空聊天的消息记录</string>
@@ -180,6 +182,11 @@
     <string name="social_nearby">附近的人</string>
     <string name="social_friend_apply_greetings">嘿，可以交个朋友吗?</string>
     <string name="social_friend_apply_sent">已成功发送好友申请</string>
+    <string name="social_friend_apply_failed">发送好友申请失败</string>
     <string name="social_define_delete_friends_apply">确定删除好友请求吗？</string>
+    <string name="social_add_friend_failed">添加好友失败</string>
+    <string name="social_delete_friend_failed">删除好友失败</string>
+    <string name="social_modify_remark_failed">修改备注失败</string>
+    <string name="social_find_person_failed_tip">本功能基于轨道WiFi发射器进行定位，站台与车厢分属不同的网络区间，上下车时需要进行切换。例：比如你在车厢内但看不到同列车的人，说明你的WiFi来源还没有自动切换至车厢，请你等列车开动了再刷新看看。</string>
     
 </resources>

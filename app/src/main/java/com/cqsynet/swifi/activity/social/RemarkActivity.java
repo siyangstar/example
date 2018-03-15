@@ -1,9 +1,20 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：修改昵称界面
+ *
+ *
+ * 创建标识：sayaki 20171205
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -17,6 +28,7 @@ import com.cqsynet.swifi.db.ContactDao;
 import com.cqsynet.swifi.model.ModifyFriendRemarkRequestBody;
 import com.cqsynet.swifi.model.UserInfo;
 import com.cqsynet.swifi.network.WebServiceIf;
+import com.cqsynet.swifi.util.ToastUtil;
 
 import org.json.JSONException;
 
@@ -28,6 +40,7 @@ public class RemarkActivity extends HkActivity {
 
     private TextView mTvNickname;
     private EditText mEtRemark;
+    private ImageView mIvClear;
 
     private String mFriendAccount;
     private String mNickname;
@@ -56,10 +69,36 @@ public class RemarkActivity extends HkActivity {
             mTvNickname.setText(mNickname);
         }
         mEtRemark = findViewById(R.id.et_remark);
+        mIvClear = findViewById(R.id.iv_clear);
         if (!TextUtils.isEmpty(mRemark)) {
             mEtRemark.setText(mRemark);
             mEtRemark.setSelection(mRemark.length());
+            mIvClear.setVisibility(View.VISIBLE);
         }
+        mEtRemark.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(s)) {
+                    mIvClear.setVisibility(View.GONE);
+                } else {
+                    mIvClear.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        mIvClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEtRemark.setText("");
+            }
+        });
         TextView tvConfirm = findViewById(R.id.tv_confirm);
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +134,10 @@ public class RemarkActivity extends HkActivity {
                     contactDao.saveUser(userInfo);
                 }
 
-                sendBroadcast(new Intent(AppConstants.ACTION_UPDATE_MSG));
+                Intent broadcast = new Intent();
+                broadcast.setAction(AppConstants.ACTION_UPDATE_MSG);
+                broadcast.setAction(AppConstants.ACTION_MODIFY_REMARK);
+                sendBroadcast(broadcast);
 
                 Intent intent = new Intent();
                 intent.putExtra("remark", mEtRemark.getText().toString());
@@ -105,7 +147,7 @@ public class RemarkActivity extends HkActivity {
 
             @Override
             public void onErrorResponse() {
-
+                ToastUtil.showToast(RemarkActivity.this, R.string.social_modify_remark_failed);
             }
         });
     }

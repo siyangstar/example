@@ -86,12 +86,16 @@ public class AppConstants {
     public static final String ACTION_SOCKET_PUSH = "cqsynet.wifi.push";
     // 删除好友广播
     public static final String ACTION_DELETE_FRIEND = "cqsynet.wifi.deletefriend";
+    // 添加好友广播
+    public static final String ACTION_ADD_FRIEND = "cqsynet.wifi.addfriend";
     // socket开始连接
     public static final String ACTION_SOCKET_CONNECTING = "cqsynet.wifi.socket.connecting";
     // 更新草稿箱
     public static final String ACTION_UPDATE_DRAFT = "cqsynet.wifi.updatedraft";
     // 更新消息列表
     public static final String ACTION_UPDATE_MSG = "cqsynet.wifi.updatemsg";
+    // 更改好友备注
+    public static final String ACTION_MODIFY_REMARK = "cqsynet.wifi.modifyremark";
 
     // SharedPreferences文件名
     public static final String SHARED_PREF_FILE_NAME = "xxxxxx";

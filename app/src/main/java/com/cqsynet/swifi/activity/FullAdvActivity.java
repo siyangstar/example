@@ -114,6 +114,10 @@ public class FullAdvActivity extends HkActivity {
 
         if (mAdvObj != null) {
             mAdvIndex = mAdvObj.getSortIndex(mAdvObj.getCurrentIndex());
+            if (Globals.g_advRestTime != -1) {
+                mAdvIndex--;
+                Globals.index_ad0009--;
+            }
             showAdv();
         } else {
             Intent data = new Intent();

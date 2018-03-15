@@ -126,7 +126,7 @@ public class ChatListAdapter extends BaseAdapter {
         //设置红点未读数量
         int count;
         if ("MyBottle".equals(itemObj.itemType)) {
-            count = BottleListDao.getInstance(mContext).queryUnReadMsgCount(itemObj.chatId);
+            count = BottleListDao.getInstance(mContext).queryUnReadMsgCount();
         } else if ("FriendApply".equals(itemObj.itemType)) {
             count = FriendApplyDao.getInstance(mContext).queryUnReadApplyCount();
         } else if ("FriendChat".equals(itemObj.itemType)){

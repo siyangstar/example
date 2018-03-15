@@ -62,6 +62,9 @@ public class SharedPreferencesInfo {
     public static final String YOUZAN_ACCESS_TOKEN = "youzan_access_token";
     public static final String MSG_FRIEND_APPLY = "msg_friend_apply"; //是否在消息列表中显示好友申请
     public static final String MSG_BOTTLE = "msg_bottle"; // 是否在消息列表中显示漂流瓶
+    public static final String SOCIAL_FILTER_SEX = "social_filter_sex"; // 社交找人筛选性别
+    public static final String SOCIAL_FILTER_AGE = "social_filter_age"; // 社交找人筛选年龄
+    public static final String SOCIAL_GUIDE = "social_guide"; // 是否第一次进入社交
     
     /**
      * @Description: 保存String类型的字符串到shareinfo。

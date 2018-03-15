@@ -22,6 +22,7 @@ public class OperateGuideActivity extends HkActivity  implements OnClickListener
     public static final int INDEX_WIFI = 0;
     public static final int INDEX_NEWS = 1;
     public static final int INDEX_BOTTLE = 3;
+    public static final int INDEX_SOCIAL = 4;
     private int mGuideIndex;
     private RelativeLayout mRlGuide;
 
@@ -40,6 +41,8 @@ public class OperateGuideActivity extends HkActivity  implements OnClickListener
         } else if (mGuideIndex == INDEX_NEWS) { // 新闻页面需要show 引导层。
             layoutId = R.layout.layout_news_guide;
         } else if (mGuideIndex == INDEX_BOTTLE) { // 漂流瓶引导层
+            layoutId = R.layout.layout_bottle_guide;
+        } else if (mGuideIndex == INDEX_SOCIAL) {
             layoutId = R.layout.layout_bottle_guide;
         }
         if (layoutId != -1) {
@@ -74,6 +77,8 @@ public class OperateGuideActivity extends HkActivity  implements OnClickListener
            SharedPreferencesInfo.setTagBoolean(this, SharedPreferencesInfo.NEWS_GUIDE, true);
        } else if (mGuideIndex == INDEX_BOTTLE) { // 退出漂流瓶引导页面，保存flag。
            SharedPreferencesInfo.setTagBoolean(this, SharedPreferencesInfo.BOTTLE_GUIDE, true);
+       } else if (mGuideIndex == INDEX_SOCIAL) { // 退出社交引导页面，保存flag。
+           SharedPreferencesInfo.setTagBoolean(this, SharedPreferencesInfo.SOCIAL_GUIDE, true);
        }
        finish();
    }

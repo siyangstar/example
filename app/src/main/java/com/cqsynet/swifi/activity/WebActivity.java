@@ -29,6 +29,8 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -156,6 +158,8 @@ public class WebActivity extends HkActivity {
     private String mCommentMessage;
     private String mCommentCount;
     private Dialog mDialog;
+    private GestureDetector mGestureDetector;   //手势检测
+    private GestureDetector.OnGestureListener mOnSlideGestureListener = null;   //左右滑动手势检测监听器
 
     static class MyHandler extends Handler {
         WeakReference<WebActivity> mWeakRef;
@@ -263,6 +267,10 @@ public class WebActivity extends HkActivity {
         } else {
             finish();
         }
+
+        //左右滑动手势监听器
+        mOnSlideGestureListener = new OnSlideGestureListener();
+        mGestureDetector = new GestureDetector(this, mOnSlideGestureListener);
 
         mFromInStatistics = initFrom(mFrom);
 
@@ -406,6 +414,10 @@ public class WebActivity extends HkActivity {
         if (Build.VERSION.SDK_INT >= 21) {
             mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
+//        //测试用
+//        if(Build.VERSION.SDK_INT >= 19) {
+//            mWebView.setWebContentsDebuggingEnabled(true);
+//        }
 
 //		mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mWebView.setWebViewClient(new WebViewClient() {
@@ -1556,5 +1568,78 @@ public class WebActivity extends HkActivity {
             f = "&f=其它";
         }
         return f;
+    }
+
+
+    /**
+     * 滑动手势分发
+     * @param ev
+     * @return
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        mGestureDetector.onTouchEvent(ev);
+        return super.dispatchTouchEvent(ev);
+    }
+
+    /**
+     * 滑动手势
+     */
+    private class OnSlideGestureListener implements GestureDetector.OnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent e) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            // TODO Auto-generated method stub
+            return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            // 参数解释：
+            // e1：第1个ACTION_DOWN MotionEvent
+            // e2：最后一个ACTION_MOVE MotionEvent
+            // velocityX：X轴上的移动速度，像素/秒
+            // velocityY：Y轴上的移动速度，像素/秒
+            // 触发条件 ：
+            // X轴的坐标位移大于FLING_MIN_DISTANCE，且移动速度大于FLING_MIN_VELOCITY个像素/秒
+            if ((e1 == null) || (e2 == null)) {
+                return false;
+            }
+            int FLING_MIN_DISTANCE = 200;
+            int FLING_MIN_VELOCITY = 100;
+            if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY && Math.abs(e1.getY() - e2.getY()) < 100) {
+                // 向左滑动
+                if(mCommentStatus.equals("0")) {
+                    //0表示文章可以正常评论
+                    CommentActivity.launch(WebActivity.this, mId, mCommentStatus, mCommentMessage);
+                }
+            } else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY && Math.abs(e1.getY() - e2.getY()) < 100) {
+                // 向右滑动
+                onBackPressed();
+            }
+            return false;
+        }
     }
 }

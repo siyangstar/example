@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：完善个人信息界面
+ *
+ *
+ * 创建标识：sayaki 20171205
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.content.Intent;
@@ -6,6 +15,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,6 +27,7 @@ import com.cqsynet.swifi.GlideApp;
 import com.cqsynet.swifi.Globals;
 import com.cqsynet.swifi.R;
 import com.cqsynet.swifi.activity.HkActivity;
+import com.cqsynet.swifi.activity.OperateGuideActivity;
 import com.cqsynet.swifi.activity.SelectionPictureActivity;
 import com.cqsynet.swifi.model.BaseResponseObject;
 import com.cqsynet.swifi.model.UserInfo;
@@ -59,11 +70,15 @@ public class PerfectInfoActivity extends HkActivity {
     private TextView mTvHigher40;
     private TextView mTvComplete;
 
+    // 选择的头像路径
     private String mHeadImagePath;
+    // 是否已经选择了头像
     private boolean mHasAvatar;
     private String mSex;
     private String mAge;
+    // 是否已经设置了性别
     private boolean mHasSex;
+    // 是否已经设置了年龄
     private boolean mHasAge;
 
     @Override
@@ -100,7 +115,7 @@ public class PerfectInfoActivity extends HkActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!TextUtils.isEmpty(s) && mHasAvatar) {
+                if (!TextUtils.isEmpty(s.toString().trim()) && mHasAvatar) {
                     mTvNext.setBackgroundResource(R.drawable.bg_green_radius_normal);
                 } else {
                     mTvNext.setBackgroundResource(R.drawable.bg_white_radius_disable);
@@ -108,6 +123,12 @@ public class PerfectInfoActivity extends HkActivity {
             }
         });
         mEtSign = view1.findViewById(R.id.et_sign);
+        mEtSign.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                return event.getKeyCode() == KeyEvent.KEYCODE_ENTER;
+            }
+        });
         mLlUploadAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,35 +205,49 @@ public class PerfectInfoActivity extends HkActivity {
             mIvSexMale.setImageResource(R.drawable.ic_male_white);
             mTvSexMale.setTextColor(getResources().getColor(R.color.white));
             mSex = "男";
-        } else if ("女".equals(Globals.g_userInfo.sex)){
+            mHasSex = true;
+        } else if ("女".equals(Globals.g_userInfo.sex)) {
             mLlFemale.setBackgroundResource(R.drawable.bg_green_radius_selector);
             mIvSexFemale.setImageResource(R.drawable.ic_female_white);
             mTvSexFemale.setTextColor(getResources().getColor(R.color.white));
             mSex = "女";
+            mHasSex = true;
         }
         if ("18岁以下".equals(Globals.g_userInfo.age)) {
             mTvLower18.setBackgroundResource(R.drawable.bg_green_radius_selector);
             mTvLower18.setTextColor(getResources().getColor(R.color.white));
             mAge = "18岁以下";
-        } else if ("18-25岁".equals(Globals.g_userInfo.age)){
+            mHasAge = true;
+        } else if ("18-25岁".equals(Globals.g_userInfo.age)) {
             mTv18To25.setBackgroundResource(R.drawable.bg_green_radius_selector);
             mTv18To25.setTextColor(getResources().getColor(R.color.white));
             mAge = "18-25岁";
+            mHasAge = true;
         } else if ("26-32岁".equals(Globals.g_userInfo.age)) {
             mTv26To32.setBackgroundResource(R.drawable.bg_green_radius_selector);
             mTv26To32.setTextColor(getResources().getColor(R.color.white));
             mAge = "26-32岁";
+            mHasAge = true;
         } else if ("33-40岁".equals(Globals.g_userInfo.age)) {
             mTv33To40.setBackgroundResource(R.drawable.bg_green_radius_selector);
             mTv33To40.setTextColor(getResources().getColor(R.color.white));
             mAge = "33-40岁";
-        } else if ("40以上".equals(Globals.g_userInfo.age)) {
+            mHasAge = true;
+        } else if ("40岁以上".equals(Globals.g_userInfo.age)) {
             mTvHigher40.setBackgroundResource(R.drawable.bg_green_radius_selector);
             mTvHigher40.setTextColor(getResources().getColor(R.color.white));
             mAge = "40岁以上";
+            mHasAge = true;
         }
         if (!TextUtils.isEmpty(mSex) && !TextUtils.isEmpty(mAge)) {
             mTvComplete.setBackgroundResource(R.drawable.bg_green_radius_selector);
+        }
+
+        // 第一次进入，显示操作引导图层
+        if (!SharedPreferencesInfo.getTagBoolean(this, SharedPreferencesInfo.SOCIAL_GUIDE, false)) {
+            Intent intent = new Intent(this, OperateGuideActivity.class);
+            intent.putExtra("type", OperateGuideActivity.INDEX_SOCIAL);
+            startActivity(intent);
         }
     }
 
@@ -366,12 +401,26 @@ public class PerfectInfoActivity extends HkActivity {
     }
 
     private void next() {
-        if (!TextUtils.isEmpty(mEtNickname.getText()) && mHasAvatar) {
+        if (!TextUtils.isEmpty(mEtNickname.getText().toString().trim()) && mHasAvatar) {
             mViewPager.setCurrentItem(1, true);
+        } else {
+            if (TextUtils.isEmpty(mEtNickname.getText().toString().trim())) {
+                ToastUtil.showToast(this, "昵称不能为空");
+            } else if (!mHasAvatar) {
+                ToastUtil.showToast(this, "头像不能为空");
+            }
         }
     }
 
     private void complete() {
+        if (TextUtils.isEmpty(mSex)) {
+            ToastUtil.showToast(this, "必须选择性别");
+            return;
+        }
+        if (TextUtils.isEmpty(mAge)) {
+            ToastUtil.showToast(this, "必须选择年龄");
+            return;
+        }
         final UserInfo userInfo = new UserInfo();
         userInfo.nickname = mEtNickname.getText().toString();
         userInfo.sign = mEtSign.getText().toString();

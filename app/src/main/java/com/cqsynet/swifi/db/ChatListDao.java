@@ -94,7 +94,7 @@ public class ChatListDao {
         Cursor cursor = db.getWritableDatabase().query(DBHelper.CHAT_LIST_TABLE, null,
                 DBHelper.CHAT_LIST_COL_ACCOUNT + "=? and " + DBHelper.CHAT_LIST_COL_OWNER + "=?",
                 new String[]{userAccount, owner}, null, null, null);
-        while (cursor.moveToNext()) {
+        if (cursor.moveToFirst()) {
             chatListItemInfo.chatId = cursor.getString(cursor.getColumnIndex(DBHelper.CHAT_LIST_COL_CHATID));
             chatListItemInfo.myAccount = cursor.getString(cursor.getColumnIndex(DBHelper.CHAT_LIST_COL_OWNER));
             chatListItemInfo.userAccount = cursor.getString(cursor.getColumnIndex(DBHelper.CHAT_LIST_COL_ACCOUNT));

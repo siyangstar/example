@@ -286,6 +286,10 @@ public class TimerService extends Service {
         nm.notify(NOTIFICATION_ID_CLOSE_WIFI, builder.build());
     }
 
+    /**
+     * 发送wifi热线统计信息
+     * @param wifiList
+     */
     public void sendWifiList(List<WiFiObject> wifiList) {
         if (wifiList.isEmpty()) {
             return;

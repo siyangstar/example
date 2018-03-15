@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：社交主界面的适配器
+ *
+ *
+ * 创建标识：sayaki 20171123
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.support.v4.app.Fragment;

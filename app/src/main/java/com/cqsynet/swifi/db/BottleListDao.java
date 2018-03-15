@@ -136,12 +136,10 @@ public class BottleListDao {
         return list;
     }
 
-    public int queryUnReadMsgCount(String chatId) {
+    public int queryUnReadMsgCount() {
         int count = 0;
         DBHelper db = new DBHelper(mContext);
-        String sql;
-        sql = "select count(*) from " + DBHelper.CHAT_TABLE + " where " + DBHelper.CHAT_COL_CHATID + "=\"" + chatId + "\" and " + DBHelper.CHAT_COL_READ_STATUS + "=0 and "
-                + DBHelper.CHAT_COL_OWNER + "=\"" + SharedPreferencesInfo.getTagString(mContext, SharedPreferencesInfo.ACCOUNT) + "\"";
+        String sql = "select count(*) from " + DBHelper.CHAT_TABLE + " where " + DBHelper.CHAT_COL_READ_STATUS + "=0 and " + DBHelper.CHAT_COL_OWNER + "=\"" + SharedPreferencesInfo.getTagString(mContext, SharedPreferencesInfo.ACCOUNT) + "\" and " + DBHelper.CHAT_COL_CATEGORY + "=\"bottle\"";
         Cursor cur = db.getWritableDatabase().rawQuery(sql, null);
         if (cur.moveToFirst()) {
             count = (int) cur.getLong(0);

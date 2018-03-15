@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：找人列表的适配器
+ *
+ *
+ * 创建标识：sayaki 20171218
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.content.Context;
@@ -13,10 +22,11 @@ import com.cqsynet.swifi.GlideApp;
 import com.cqsynet.swifi.R;
 import com.cqsynet.swifi.model.FindPersonInfo;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
- * Author: Arturia
+ * Author: sayaki
  * Date: 2017/12/18
  */
 public class FindPersonAdapter extends BaseAdapter {
@@ -57,6 +67,7 @@ public class FindPersonAdapter extends BaseAdapter {
             viewHolder.tvAge = convertView.findViewById(R.id.tv_age);
             viewHolder.ivSex = convertView.findViewById(R.id.iv_sex);
             viewHolder.tvSign = convertView.findViewById(R.id.tv_sign);
+            viewHolder.tvDistance = convertView.findViewById(R.id.tv_distance);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -72,22 +83,37 @@ public class FindPersonAdapter extends BaseAdapter {
             viewHolder.tvFriend.setVisibility(View.GONE);
         }
         if ("男".equals(person.sex)) {
+            viewHolder.ivSex.setVisibility(View.VISIBLE);
             viewHolder.ivSex.setImageResource(R.drawable.ic_male);
         } else if ("女".equals(person.sex)) {
+            viewHolder.ivSex.setVisibility(View.VISIBLE);
             viewHolder.ivSex.setImageResource(R.drawable.ic_female);
+        } else {
+            viewHolder.ivSex.setVisibility(View.GONE);
         }
-        if (!TextUtils.isEmpty(person.age)) {
-            viewHolder.tvAge.setText(person.age);
+        viewHolder.tvAge.setText(person.age);
+        viewHolder.tvSign.setText(person.sign);
+        if (!TextUtils.isEmpty(person.distance)) {
+            int distance = Integer.valueOf(person.distance);
+            String distanceStr;
+            // 小于10m都算作10m
+            if (distance <= 10) {
+                distanceStr = "0.01km";
+            } else {
+                DecimalFormat df = new DecimalFormat("0.00");
+                distanceStr = df.format(distance * 1.0f / 1000) + "km";
+            }
+            viewHolder.tvDistance.setText(distanceStr);
+            viewHolder.tvDistance.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.tvDistance.setVisibility(View.GONE);
         }
-        if (!TextUtils.isEmpty(person.sign)) {
-            viewHolder.tvSign.setText(person.sign);
-        }
-        if (!TextUtils.isEmpty(person.headUrl)) {
-            GlideApp.with(mContext)
-                    .load(person.headUrl)
-                    .circleCrop()
-                    .into(viewHolder.ivAvatar);
-        }
+        GlideApp.with(mContext)
+                .load(person.headUrl)
+                .circleCrop()
+                .placeholder(R.drawable.icon_profile_default_round)
+                .error(R.drawable.icon_profile_default_round)
+                .into(viewHolder.ivAvatar);
 
         return convertView;
     }
@@ -99,5 +125,6 @@ public class FindPersonAdapter extends BaseAdapter {
         private TextView tvAge;
         private ImageView ivSex;
         private TextView tvSign;
+        private TextView tvDistance;
     }
 }

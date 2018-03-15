@@ -1,14 +1,6 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        debug {
-            keyAlias 'sy'
-            keyPassword 'cqsynet'
-            storeFile file('F:/资料/尚渝/sy.keystore')
-            storePassword 'cqsynet'
-        }
-    }
     compileSdkVersion 27
     buildToolsVersion '26.0.2'
     useLibrary 'org.apache.http.legacy'
@@ -39,9 +31,6 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            signingConfig signingConfigs.debug
         }
     }
     lintOptions {

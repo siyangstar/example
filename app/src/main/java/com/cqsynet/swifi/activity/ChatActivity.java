@@ -134,6 +134,7 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
         IntentFilter filter = new IntentFilter();
         filter.addAction(AppConstants.ACTION_SOCKET_PUSH);
         filter.addAction(AppConstants.ACTION_DELETE_FRIEND);
+        filter.addAction(AppConstants.ACTION_MODIFY_REMARK);
         registerReceiver(mMessageReceiver, filter);
         //初始化声音管理器
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -439,6 +440,7 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
                 friendIntent.setClass(ChatActivity.this, PersonInfoActivity.class);
                 friendIntent.putExtra("friendAccount", mFriendAccount);
                 friendIntent.putExtra("isFriend", mCategory);
+                friendIntent.putExtra("category", mCategory);
                 startActivity(friendIntent);
                 break;
             case R.id.btnTypeSwitcher_activity_chat: //语音文字切换按钮
@@ -929,6 +931,20 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
                 }
             } else if (AppConstants.ACTION_DELETE_FRIEND.equals(action)) {
                 finish();
+            } else if (AppConstants.ACTION_MODIFY_REMARK.equals(action)) {
+                if ("0".equals(mCategory)) {
+                    mTvTitle.setText("来自" + mPosition + "的瓶子");
+                } else if ("1".equals(mCategory)) {
+                    ContactDao contactDao = ContactDao.getInstance(ChatActivity.this);
+                    UserInfo userInfo = contactDao.queryUser(mFriendAccount);
+                    if (userInfo != null) {
+                        if (!TextUtils.isEmpty(userInfo.remark)) {
+                            mTvTitle.setText(userInfo.remark);
+                        } else {
+                            mTvTitle.setText(userInfo.nickname);
+                        }
+                    }
+                }
             }
         }
     }

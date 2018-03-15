@@ -63,6 +63,11 @@ public class FriendsDao {
         db.close();
     }
 
+    public void deleteAll(String owner) {
+        DBHelper db = new DBHelper((mContext));
+        db.getWritableDatabase().delete(DBHelper.FRIENDS_TABLE, DBHelper.FRIENDS_COL_OWNER + "=?", new String[]{owner});
+    }
+
     public FriendsInfo query(String userAccount, String owner) {
         DBHelper db = new DBHelper(mContext);
         Cursor cursor = db.getWritableDatabase().query(DBHelper.FRIENDS_TABLE, null,
@@ -87,7 +92,7 @@ public class FriendsDao {
         List<FriendsInfo> friendsInfos = new ArrayList<>();
         DBHelper db = new DBHelper(mContext);
         Cursor cursor = db.getWritableDatabase().query(DBHelper.FRIENDS_TABLE, null,
-                DBHelper.FRIENDS_COL_ACCOUNT + "=? and " + DBHelper.FRIENDS_COL_OWNER + "=?",
+                DBHelper.FRIENDS_COL_OWNER + "=?",
                 new String[]{owner},
                 null, null, null);
         if (cursor.moveToFirst()) {

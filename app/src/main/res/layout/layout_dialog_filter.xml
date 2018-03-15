@@ -221,7 +221,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/bg_white_radius_selector"
+        android:background="@drawable/bg_gray_wireframe"
         android:gravity="center"
         android:text="取消"
         android:textColor="@color/text2" />

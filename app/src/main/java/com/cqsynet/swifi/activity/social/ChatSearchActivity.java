@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：聊天记录搜索界面
+ *
+ *
+ * 创建标识：sayaki 20180116
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.content.Intent;
@@ -82,6 +91,11 @@ public class ChatSearchActivity extends HkActivity implements SearchView.SearchV
         for (UserInfo userInfo : userInfos) {
             ChatListItemInfo chatListItemInfo = chatListDao.query(userInfo.userAccount,
                     SharedPreferencesInfo.getTagString(this, SharedPreferencesInfo.ACCOUNT));
+            if (!TextUtils.isEmpty(userInfo.remark)) {
+                chatListItemInfo.position = userInfo.remark;
+            } else {
+                chatListItemInfo.position = userInfo.nickname;
+            }
             mChatList.add(chatListItemInfo);
         }
         mAdapter.notifyDataSetChanged();

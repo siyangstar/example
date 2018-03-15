@@ -45,6 +45,7 @@
             android:id="@+id/iv_avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
             android:contentDescription="@null"
             android:src="@drawable/icon_profile_default_round" />
 
@@ -65,6 +66,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:ellipsize="end"
                     android:lines="1"
                     android:textColor="@color/text1"
                     android:textSize="20sp" />
@@ -90,6 +92,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/text3"
                 android:textSize="14sp" />
 
@@ -97,6 +101,8 @@
                 android:id="@+id/tv_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/text3"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -126,6 +132,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/white"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/text3"
             android:textSize="14sp" />
 
@@ -174,7 +182,7 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_green_radius_selector"
             android:gravity="center"
-            android:text="发送"
+            android:text="发送消息"
             android:textColor="@color/white"
             android:visibility="gone" />
 

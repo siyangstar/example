@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2F2F2"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <com.cqsynet.swifi.view.TitleBar
         android:id="@+id/titlebar_activity_user_center"
@@ -15,12 +15,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none" >
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/llHead_usercenter"
@@ -30,7 +30,7 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:onClick="click"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/user_center_label"
@@ -49,6 +49,13 @@
                     android:layout_height="60dp"
                     android:layout_marginRight="20dp"
                     android:src="@drawable/icon_profile_default_round" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more" />
             </LinearLayout>
 
             <View
@@ -66,7 +73,7 @@
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:onClick="click"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/user_center_label"
@@ -76,7 +83,16 @@
 
                 <TextView
                     android:id="@+id/tvNick_activity_user_center"
-                    style="@style/user_center_value" />
+                    style="@style/user_center_value"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more" />
             </LinearLayout>
 
             <View
@@ -93,7 +109,7 @@
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:onClick="click"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/user_center_label"
@@ -103,7 +119,16 @@
 
                 <TextView
                     android:id="@+id/tvSign_activity_user_center"
-                    style="@style/user_center_value" />
+                    style="@style/user_center_value"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more" />
             </LinearLayout>
 
             <View
@@ -120,7 +145,7 @@
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:onClick="click"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/user_center_label"
@@ -131,6 +156,13 @@
                 <TextView
                     android:id="@+id/tvSex_activity_user_center"
                     style="@style/user_center_value" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more" />
             </LinearLayout>
 
             <View
@@ -146,7 +178,7 @@
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:onClick="click"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/user_center_label"
@@ -157,6 +189,13 @@
                 <TextView
                     android:id="@+id/tvAge_activity_user_center"
                     style="@style/user_center_value" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more" />
             </LinearLayout>
 
             <View
@@ -174,7 +213,7 @@
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:onClick="click"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/user_center_label"
@@ -185,6 +224,13 @@
                 <TextView
                     android:id="@+id/tvTrofession_activity_user_center"
                     style="@style/user_center_value" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more" />
             </LinearLayout>
 
             <View
@@ -201,7 +247,7 @@
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:onClick="click"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/user_center_label"
@@ -212,6 +258,13 @@
                 <TextView
                     android:id="@+id/tvAddress_activity_user_center"
                     style="@style/user_center_value" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more" />
             </LinearLayout>
 
             <View
@@ -228,7 +281,7 @@
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:onClick="click"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <TextView
                     style="@style/user_center_label"
@@ -239,6 +292,13 @@
                 <TextView
                     android:id="@+id/tvStep_activity_user_center"
                     style="@style/user_center_value" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more" />
             </LinearLayout>
 
             <View

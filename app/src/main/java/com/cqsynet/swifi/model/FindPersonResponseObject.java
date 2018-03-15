@@ -11,7 +11,8 @@ public class FindPersonResponseObject extends BaseResponseObject {
     public FindPersonResponseBody body;
 
     public class FindPersonResponseBody {
-        public String location; // 用户所在地; 按线路查找时显示线路名，按站台查找时显示站台名
+        public String station; // 用户所在车站
+        public String line;    // 用户所在线路
         public ArrayList<FindPersonInfo> userList;
     }
 }

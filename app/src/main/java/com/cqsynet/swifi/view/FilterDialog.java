@@ -106,7 +106,7 @@ public class FilterDialog extends Dialog implements android.view.View.OnClickLis
         } else if ("33-40岁".equals(mAge)) {
             mTv33To40.setBackgroundResource(R.drawable.bg_green_radius_selector);
             mTv33To40.setTextColor(mContext.getResources().getColor(R.color.white));
-        } else if ("40以上".equals(mAge)) {
+        } else if ("40岁以上".equals(mAge)) {
             mTvHigher40.setBackgroundResource(R.drawable.bg_green_radius_selector);
             mTvHigher40.setTextColor(mContext.getResources().getColor(R.color.white));
         }
@@ -126,7 +126,7 @@ public class FilterDialog extends Dialog implements android.view.View.OnClickLis
                     mTvSexAll.setBackgroundResource(R.drawable.bg_green_radius_selector);
                     mTvSexAll.setTextColor(mContext.getResources().getColor(R.color.white));
                     mLlMale.setBackgroundResource(R.drawable.bg_gray_wireframe);
-                    mIvSexMale.setImageResource(R.drawable.ic_male_white);
+                    mIvSexMale.setImageResource(R.drawable.ic_male);
                     mTvSexMale.setTextColor(mContext.getResources().getColor(R.color.text2));
                     mLlFemale.setBackgroundResource(R.drawable.bg_gray_wireframe);
                     mIvSexFemale.setImageResource(R.drawable.ic_female);
@@ -252,7 +252,7 @@ public class FilterDialog extends Dialog implements android.view.View.OnClickLis
                     mTv33To40.setTextColor(mContext.getResources().getColor(R.color.text2));
                     mTvHigher40.setBackgroundResource(R.drawable.bg_green_radius_selector);
                     mTvHigher40.setTextColor(mContext.getResources().getColor(R.color.white));
-                    mAge = "40以上";
+                    mAge = "40岁以上";
                     break;
             }
         }

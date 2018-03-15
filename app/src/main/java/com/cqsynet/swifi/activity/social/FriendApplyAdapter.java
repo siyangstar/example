@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：好友申请列表的适配器
+ *
+ *
+ * 创建标识：sayaki 20180104
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.content.Context;
@@ -12,7 +21,9 @@ import android.widget.TextView;
 
 import com.cqsynet.swifi.GlideApp;
 import com.cqsynet.swifi.R;
+import com.cqsynet.swifi.db.ContactDao;
 import com.cqsynet.swifi.model.FriendApplyInfo;
+import com.cqsynet.swifi.model.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,13 +76,19 @@ public class FriendApplyAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        if (!TextUtils.isEmpty(friendApply.avatar)) {
-            GlideApp.with(mContext)
-                    .load(friendApply.avatar)
-                    .circleCrop()
-                    .into(viewHolder.ivAvatar);
-        }
-        if (!TextUtils.isEmpty(friendApply.nickname)) {
+        GlideApp.with(mContext)
+                .load(friendApply.avatar)
+                .circleCrop()
+                .placeholder(R.drawable.icon_profile_default_round)
+                .error(R.drawable.icon_profile_default_round)
+                .into(viewHolder.ivAvatar);
+        ContactDao contactDao = ContactDao.getInstance(mContext);
+        UserInfo userInfo = contactDao.queryUser(friendApply.userAccount);
+        if (userInfo != null) {
+            if (!TextUtils.isEmpty(userInfo.remark)) {
+                viewHolder.tvName.setText(userInfo.remark);
+            }
+        } else {
             viewHolder.tvName.setText(friendApply.nickname);
         }
         if (!TextUtils.isEmpty(friendApply.content)) {
@@ -90,19 +107,23 @@ public class FriendApplyAdapter extends BaseAdapter {
         });
         if ("0".equals(friendApply.replyStatus)) {
             viewHolder.tvAgree.setText("同意");
+            viewHolder.tvAgree.setTextColor(mContext.getResources().getColor(R.color.white));
             viewHolder.tvAgree.setBackgroundResource(R.drawable.bg_green_radius_selector);
             viewHolder.tvAgree.setClickable(true);
-        } else if ("1".equals(friendApply.replyStatus)){
+        } else if ("1".equals(friendApply.replyStatus)) {
             viewHolder.tvAgree.setText("已同意");
-            viewHolder.tvAgree.setBackgroundResource(R.drawable.bg_gray_radius);
+            viewHolder.tvAgree.setTextColor(mContext.getResources().getColor(R.color.text3));
+            viewHolder.tvAgree.setBackgroundColor(mContext.getResources().getColor(R.color.bg_grey));
             viewHolder.tvAgree.setClickable(false);
         } else if ("2".equals(friendApply.replyStatus)) {
             viewHolder.tvAgree.setText("已拒绝");
-            viewHolder.tvAgree.setBackgroundResource(R.drawable.bg_gray_radius);
+            viewHolder.tvAgree.setTextColor(mContext.getResources().getColor(R.color.text3));
+            viewHolder.tvAgree.setBackgroundColor(mContext.getResources().getColor(R.color.bg_grey));
             viewHolder.tvAgree.setClickable(false);
         } else if ("3".equals(friendApply.replyStatus)) {
             viewHolder.tvAgree.setText("已拉黑");
-            viewHolder.tvAgree.setBackgroundResource(R.drawable.bg_gray_radius);
+            viewHolder.tvAgree.setTextColor(mContext.getResources().getColor(R.color.text3));
+            viewHolder.tvAgree.setBackgroundColor(mContext.getResources().getColor(R.color.bg_grey));
             viewHolder.tvAgree.setClickable(false);
         }
         viewHolder.cbDelete.setVisibility(isMultiMode ? View.VISIBLE : View.GONE);

@@ -1,6 +1,18 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：好友列表界面
+ *
+ *
+ * 创建标识：sayaki 20171123
+ */
 package com.cqsynet.swifi.activity.social;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,6 +44,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -46,6 +59,7 @@ public class FriendsFragment extends Fragment implements AdapterView.OnItemClick
 
     private FriendsAdapter mAdapter;
     private List<FriendsInfo> mFriends = new ArrayList<>();
+    private MessageReceiver mMessageReceiver;
 
     @Nullable
     @Override
@@ -56,6 +70,8 @@ public class FriendsFragment extends Fragment implements AdapterView.OnItemClick
         mAdapter = new FriendsAdapter(getActivity(), mFriends);
         mListFriends.setAdapter(mAdapter);
         mListFriends.setOnItemClickListener(this);
+        View searchView = getLayoutInflater().inflate(R.layout.layout_chat_search, null);
+        mListFriends.addHeaderView(searchView);
         mSideIndexBar = view.findViewById(R.id.index_bar);
         mSideIndexBar.setLetterChangedListener(new SideIndexBar.OnLetterChangedListener() {
             @Override
@@ -64,9 +80,29 @@ public class FriendsFragment extends Fragment implements AdapterView.OnItemClick
             }
         });
 
+        mMessageReceiver = new MessageReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AppConstants.ACTION_SOCKET_PUSH);
+        filter.addAction(AppConstants.ACTION_DELETE_FRIEND);
+        filter.addAction(AppConstants.ACTION_ADD_FRIEND);
+        filter.addAction(AppConstants.ACTION_MODIFY_REMARK);
+        getActivity().registerReceiver(mMessageReceiver, filter);
+
+        getFriends();
+
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().unregisterReceiver(mMessageReceiver);
+    }
+
+    /**
+     * 滚动到对应的好友名称
+     * @param s 名称
+     */
     private void scrollToPosition(String s) {
         int position = 0;
         for (int i = 0; i < mFriends.size(); i++) {
@@ -82,12 +118,6 @@ public class FriendsFragment extends Fragment implements AdapterView.OnItemClick
             }
         }
         mListFriends.setSelection(position);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        getFriends();
     }
 
     private void getFriends() {
@@ -107,6 +137,22 @@ public class FriendsFragment extends Fragment implements AdapterView.OnItemClick
 
                         mAdapter.notifyDataSetChanged();
                         updateHint();
+
+                        FriendsDao friendsDao = FriendsDao.getInstance(getActivity());
+                        ContactDao contactDao = ContactDao.getInstance(getActivity());
+                        friendsDao.deleteAll(SharedPreferencesInfo.getTagString(getActivity(), SharedPreferencesInfo.ACCOUNT));
+                        Iterator<FriendsInfo> iterator = mFriends.iterator();
+                        while (iterator.hasNext()) {
+                            FriendsInfo friendsInfo = iterator.next();
+                            friendsDao.insert(friendsInfo.userAccount, SharedPreferencesInfo.getTagString(getActivity(), SharedPreferencesInfo.ACCOUNT));
+                            UserInfo userInfo = new UserInfo();
+                            userInfo.userAccount = friendsInfo.userAccount;
+                            userInfo.nickname = friendsInfo.nickname;
+                            userInfo.sex = friendsInfo.sex;
+                            userInfo.headUrl = friendsInfo.headUrl;
+                            userInfo.remark = friendsInfo.remark;
+                            contactDao.saveUser(userInfo);
+                        }
                     } else {
                         getFriendsFromDB();
                     }
@@ -134,10 +180,12 @@ public class FriendsFragment extends Fragment implements AdapterView.OnItemClick
                     friendsInfo.nickname = userInfo.nickname;
                     friendsInfo.headUrl = userInfo.headUrl;
                     friendsInfo.sex = userInfo.sex;
+                    friendsInfo.remark = userInfo.remark;
                     mFriends.add(friendsInfo);
                 }
             }
             mAdapter.notifyDataSetChanged();
+            updateHint();
         }
     }
 
@@ -153,10 +201,39 @@ public class FriendsFragment extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(getActivity(), PersonInfoActivity.class);
-        intent.putExtra("friendAccount", mFriends.get(position).userAccount);
-        intent.putExtra("isFriend", "1");
-        startActivity(intent);
+        if (position == 0) {
+            startActivity(new Intent(getActivity(), ChatSearchActivity.class));
+        } else {
+            Intent intent = new Intent(getActivity(), PersonInfoActivity.class);
+            intent.putExtra("friendAccount", mFriends.get(position - 1).userAccount);
+            intent.putExtra("isFriend", "1");
+            intent.putExtra("category", "1"); //1表示是社交,0表示是漂流瓶
+            startActivity(intent);
+        }
+    }
+
+    private class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (AppConstants.ACTION_DELETE_FRIEND.equals(action)) {
+                String userAccount = intent.getStringExtra("userAccount");
+                for (FriendsInfo friendsInfo : mFriends) {
+                    if (friendsInfo.userAccount.equals(userAccount)) {
+                        mFriends.remove(friendsInfo);
+                        mAdapter.notifyDataSetChanged();
+                        updateHint();
+                        break;
+                    }
+                }
+            } else if (AppConstants.ACTION_SOCKET_PUSH.equals(action)) {
+                getFriends();
+            } else if (AppConstants.ACTION_ADD_FRIEND.equals(action)) {
+                getFriends();
+            } else if (AppConstants.ACTION_MODIFY_REMARK.equals(action)) {
+                getFriends();
+            }
+        }
     }
 
     private class FriendsComparator implements Comparator<FriendsInfo> {

@@ -175,7 +175,7 @@ public class ChatMsgDao {
         DBHelper db = new DBHelper(mContext);
         String sql = "select count(*) from " + DBHelper.CHAT_TABLE + " where " + DBHelper.CHAT_COL_READ_STATUS + "=0 and "
                 + DBHelper.CHAT_COL_OWNER + "=\"" + SharedPreferencesInfo.getTagString(mContext, SharedPreferencesInfo.ACCOUNT) + "\"";
-        Cursor cur = db.getWritableDatabase().rawQuery(sql, null);
+        Cursor cur = db.getReadableDatabase().rawQuery(sql, null);
         if (cur.moveToFirst()) {
             count = (int) cur.getLong(0);
         }

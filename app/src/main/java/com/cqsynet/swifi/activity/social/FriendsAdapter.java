@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：好友列表的适配器
+ *
+ *
+ * 创建标识：sayaki 20171204
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.content.Context;
@@ -23,6 +32,7 @@ import java.util.List;
 public class FriendsAdapter extends BaseAdapter {
 
     private static final String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#";
+    private static final String NUMBERS = "0123456789";
 
     private Context mContext;
     private List<FriendsInfo> mFriends;
@@ -77,19 +87,21 @@ public class FriendsAdapter extends BaseAdapter {
                 currentName = friend.remark;
             } else if (!TextUtils.isEmpty(friend.nickname)) {
                 currentName = friend.nickname;
+            } else {
+                currentName = "神秘用户";
             }
             if (!TextUtils.isEmpty(mFriends.get(position - 1).remark)) {
                 lastName = mFriends.get(position - 1).remark;
             } else if (!TextUtils.isEmpty(mFriends.get(position - 1).nickname)) {
                 lastName = mFriends.get(position - 1).nickname;
             }
-            String firstLetter = Pinyin.toPinyin(currentName.toCharArray()[0]).substring(0, 1);
-            if (!firstLetter.equals(Pinyin.toPinyin(lastName.toCharArray()[0]).substring(0, 1))) {
+            String firstLetter = Pinyin.toPinyin(currentName.toCharArray()[0]).substring(0, 1).toUpperCase();
+            if (!firstLetter.equals(Pinyin.toPinyin(lastName.toCharArray()[0]).substring(0, 1).toUpperCase())) {
                 viewHolder.tvLetter.setVisibility(View.VISIBLE);
-                if (!LETTERS.contains(firstLetter)) {
+                if (!LETTERS.contains(firstLetter) && !NUMBERS.contains(firstLetter)) {
                     viewHolder.tvLetter.setText("#");
                 } else {
-                    viewHolder.tvLetter.setText(Pinyin.toPinyin(currentName.toCharArray()[0]).substring(0, 1));
+                    viewHolder.tvLetter.setText(Pinyin.toPinyin(currentName.toCharArray()[0]).substring(0, 1).toUpperCase());
                 }
             } else {
                 viewHolder.tvLetter.setVisibility(View.GONE);
@@ -103,6 +115,7 @@ public class FriendsAdapter extends BaseAdapter {
         GlideApp.with(mContext)
                 .load(friend.headUrl)
                 .circleCrop()
+                .placeholder(R.drawable.icon_profile_default_round)
                 .error(R.drawable.icon_profile_default_round)
                 .into(viewHolder.ivAvatar);
         if ("男".equals(friend.sex)) {

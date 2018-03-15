@@ -1,5 +1,15 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：好友申请界面
+ *
+ *
+ * 创建标识：sayaki 20171205
+ */
 package com.cqsynet.swifi.activity.social;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -10,11 +20,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cqsynet.swifi.AppConstants;
 import com.cqsynet.swifi.R;
 import com.cqsynet.swifi.activity.HkActivity;
 import com.cqsynet.swifi.model.AddOrRemoveFriendRequestBody;
+import com.cqsynet.swifi.model.FriendApplyResponseObject;
+import com.cqsynet.swifi.model.ResponseHeader;
 import com.cqsynet.swifi.network.WebServiceIf;
 import com.cqsynet.swifi.util.ToastUtil;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 
@@ -82,12 +96,21 @@ public class FriendApplyActivity extends HkActivity {
             @Override
             public void onResponse(String response) throws JSONException {
                 Log.i("FriendApplyActivity", "@@@#@response: " + response);
-                ToastUtil.showToast(FriendApplyActivity.this, getString(R.string.social_friend_apply_sent));
-                FriendApplyActivity.this.finish();
+                Gson gson = new Gson();
+                FriendApplyResponseObject object = gson.fromJson(response, FriendApplyResponseObject.class);
+                ResponseHeader header = object.header;
+                if (AppConstants.RET_OK.equals(header.ret)) {
+                    ToastUtil.showToast(FriendApplyActivity.this, getString(R.string.social_friend_apply_sent));
+                    FriendApplyActivity.this.sendBroadcast(new Intent(AppConstants.ACTION_ADD_FRIEND));
+                    FriendApplyActivity.this.finish();
+                } else {
+                    ToastUtil.showToast(FriendApplyActivity.this, getString(R.string.social_friend_apply_failed));
+                }
             }
 
             @Override
             public void onErrorResponse() {
+                ToastUtil.showToast(FriendApplyActivity.this, getString(R.string.social_friend_apply_failed));
             }
         };
         WebServiceIf.addOrRemoveFriend(this, body, callback);

@@ -523,6 +523,9 @@ public class PushService extends Service {
     }
 
     private void handleFriendApplyMsg(FriendApplyInfo applyInfo) {
+        if (TextUtils.isEmpty(applyInfo.content)) {
+            applyInfo.content = getString(R.string.social_friend_apply_greetings);
+        }
         FriendApplyDao friendApplyDao = FriendApplyDao.getInstance(this);
         FriendApplyInfo friendApplyInfo = friendApplyDao.query(applyInfo.userAccount,
                 SharedPreferencesInfo.getTagString(this, SharedPreferencesInfo.ACCOUNT));

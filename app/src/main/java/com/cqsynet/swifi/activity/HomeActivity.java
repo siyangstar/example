@@ -203,9 +203,9 @@ public class HomeActivity extends BasicFragmentActivity implements OnClickListen
                 } else {
                     startActivity(new Intent(this, SocialActivity.class));
                 }
-//                //隐藏漂流瓶红点
-//                findViewById(R.id.ivSnsMore_home).setVisibility(View.GONE);
-//                SharedPreferencesInfo.setTagBoolean(this, SharedPreferencesInfo.BOTTLE_NOTIFY_IN_HOME, false);
+                //隐藏社交红点
+                findViewById(R.id.ivSnsMore_home).setVisibility(View.GONE);
+                SharedPreferencesInfo.setTagBoolean(this, SharedPreferencesInfo.BOTTLE_NOTIFY_IN_HOME, false);
                 break;
             case R.id.iv_find: // 点击进入更多页面。
                 if (mFindFragment == null) {
@@ -298,7 +298,9 @@ public class HomeActivity extends BasicFragmentActivity implements OnClickListen
             findViewById(R.id.ivSnsMore_home).setVisibility(View.GONE);
         }
         //设置红点未读数量
-        int count = ChatMsgDao.getInstance(this).queryAllUnReadMsgCount() + FriendApplyDao.getInstance(this).queryUnReadApplyCount();
+        int chatMsgCount = ChatMsgDao.getInstance(this).queryAllUnReadMsgCount();
+        int friendApplyMsgCount = FriendApplyDao.getInstance(this).queryUnReadApplyCount();
+        int count = chatMsgCount + friendApplyMsgCount;
         if (count < 100) {
             mTvSnsHint.setText(count + "");
         } else {
@@ -391,11 +393,13 @@ public class HomeActivity extends BasicFragmentActivity implements OnClickListen
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String type = intent.getStringExtra("type");
-            if (!TextUtils.isEmpty(type) && type.equals(AppConstants.PUSH_BOTTLE)) {
-                refreshBottleRedPoint();
+            if(intent.getAction().equals(AppConstants.ACTION_SOCKET_PUSH)) {
+                String type = intent.getStringExtra("type");
+                if (!TextUtils.isEmpty(type) && (type.equals(AppConstants.PUSH_BOTTLE) || type.equals(AppConstants.PUSH_CHAT) || type.equals(AppConstants.PUSH_FRIEND_APPLY))) {
+                    refreshBottleRedPoint();
+                }
+                refreshFindRedPoint();
             }
-            refreshFindRedPoint();
         }
     }
 

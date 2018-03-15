@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：人物信息界面
+ *
+ *
+ * 创建标识：sayaki 20180210
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.app.Activity;
@@ -48,6 +57,7 @@ public class PersonInfoActivity extends HkActivity implements View.OnClickListen
 
     private String mFriendAccount;
     private String mIsFriend;
+    private String mCategory; //0表示漂流瓶,1表示社交
     private FindPersonInfo mPerson;
 
     private ImageView mIvAvatar;
@@ -107,6 +117,7 @@ public class PersonInfoActivity extends HkActivity implements View.OnClickListen
 
         mFriendAccount = getIntent().getStringExtra("friendAccount");
         mIsFriend = getIntent().getStringExtra("isFriend");
+        mCategory = getIntent().getStringExtra("category");
         mPerson = getIntent().getParcelableExtra("person");
 
         if (mPerson != null) {
@@ -263,7 +274,11 @@ public class PersonInfoActivity extends HkActivity implements View.OnClickListen
         complainIntent.putExtra("url", AppConstants.COMPLAIN_PAGE);
         complainIntent.putExtra("friendAccount", mFriendAccount);
         complainIntent.putExtra("userAccount", SharedPreferencesInfo.getTagString(this, SharedPreferencesInfo.ACCOUNT));
-        complainIntent.putExtra("complainType", "chat");
+        if(mCategory.equals("0")) {
+            complainIntent.putExtra("complainType", "chat");
+        } else {
+            complainIntent.putExtra("complainType", "social");
+        }
         startActivity(complainIntent);
     }
 
@@ -288,11 +303,13 @@ public class PersonInfoActivity extends HkActivity implements View.OnClickListen
                 contactDao.delUser(mFriendAccount);
 
                 PersonInfoActivity.this.finish();
-                sendBroadcast(new Intent(AppConstants.ACTION_DELETE_FRIEND));
+                Intent intent = new Intent(AppConstants.ACTION_DELETE_FRIEND);
+                sendBroadcast(intent.putExtra("userAccount", mFriendAccount));
             }
 
             @Override
             public void onErrorResponse() {
+                ToastUtil.showToast(PersonInfoActivity.this, R.string.social_delete_friend_failed);
             }
         };
         WebServiceIf.addOrRemoveFriend(this, body, callback);
@@ -354,16 +371,19 @@ public class PersonInfoActivity extends HkActivity implements View.OnClickListen
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == MODIFY_REMARK_REQUEST) {
                 String remark = data.getStringExtra("remark");
+                mPerson.remark = remark;
                 if (!TextUtils.isEmpty(remark)) {
                     mTvName.setText(remark);
                     if (!TextUtils.isEmpty(mPerson.nickname)) {
                         mTvNickname.setText("昵称：" + mPerson.nickname);
+                        mTvNickname.setVisibility(View.VISIBLE);
                     }
                 } else {
                     mTvName.setText(mPerson.nickname);
                     mTvNickname.setVisibility(View.GONE);
                 }
                 mTvRemark.setText(remark);
+                sendBroadcast(new Intent(AppConstants.ACTION_MODIFY_REMARK));
             }
         }
     }

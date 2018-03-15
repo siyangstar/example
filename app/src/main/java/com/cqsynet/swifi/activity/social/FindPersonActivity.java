@@ -1,10 +1,21 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：找人界面
+ *
+ *
+ * 创建标识：sayaki 20171123
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -30,7 +41,10 @@ import com.cqsynet.swifi.model.ResponseHeader;
 import com.cqsynet.swifi.network.WebServiceIf;
 import com.cqsynet.swifi.util.DateUtil;
 import com.cqsynet.swifi.util.NetworkUtil;
+import com.cqsynet.swifi.util.SharedPreferencesInfo;
+import com.cqsynet.swifi.util.ToastUtil;
 import com.cqsynet.swifi.view.FilterDialog;
+import com.cqsynet.swifi.view.TipDialog;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -68,7 +82,9 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
     private PullToRefreshListView mListView;
     private LinearLayout mLlHint;
     private ImageView mIvHint;
-    private TextView mTvHint;
+    private TextView mTvHint1;
+    private TextView mTvHint2;
+    private ImageView mIvTip;
     private ProgressBar mLoadingBar;
     private FilterDialog mFilterDialog;
 
@@ -76,7 +92,8 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
     // 是否有下一页
     private boolean mHasMore = true;
 
-    private String mLocation;
+    private String mStation;
+    private String mLine;
     private String mType = TYPE_TRAIN;
     private String mAction = ACTION_REFRESH;
     private String mAge = "不限";
@@ -85,6 +102,7 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
 
     private FindPersonAdapter mAdapter;
     private List<FindPersonInfo> mPersonList = new ArrayList<>();
+    private MessageReceiver mMessageReceiver;
 
     public static void launch(Context context, String type) {
         Intent intent = new Intent();
@@ -133,8 +151,8 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
             public void onLastItemVisible() {
                 if (mHasMore) {
                     mAction = ACTION_LOAD_MORE;
-                    findPerson(ACTION_LOAD_MORE);
                     mLoadingBar.setVisibility(View.VISIBLE);
+                    findPerson(ACTION_LOAD_MORE);
                 }
             }
         });
@@ -146,21 +164,52 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 mAction = ACTION_REFRESH;
-                findPerson(ACTION_REFRESH);
                 mLoadingBar.setVisibility(View.VISIBLE);
+                findPerson(ACTION_REFRESH);
             }
         });
         mIvHint = findViewById(R.id.iv_hint);
-        mTvHint = findViewById(R.id.tv_hint);
+        mTvHint1 = findViewById(R.id.tv_hint_1);
+        mTvHint2 = findViewById(R.id.tv_hint_2);
+        mIvTip = findViewById(R.id.iv_tip);
+        mIvTip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TipDialog(FindPersonActivity.this, R.style.round_corner_dialog, getString(R.string.social_find_person_failed_tip)).show();
+            }
+        });
+
         mLoadingBar = findViewById(R.id.loading_bar);
 
         mFindCategoryArray = getResources().getStringArray(R.array.find_category);
 
-        mType = getIntent().getStringExtra("type");
-        findPerson(ACTION_REFRESH);
         mLoadingBar.setVisibility(View.VISIBLE);
 
+        mType = getIntent().getStringExtra("type");
+        mSex = SharedPreferencesInfo.getTagString(this, SharedPreferencesInfo.SOCIAL_FILTER_SEX);
+        if (TextUtils.isEmpty(mSex)) {
+            mSex = "不限";
+        }
+        mAge = SharedPreferencesInfo.getTagString(this, SharedPreferencesInfo.SOCIAL_FILTER_AGE);
+        if (TextUtils.isEmpty(mAge)) {
+            mAge = "不限";
+        }
+        findPerson(ACTION_REFRESH);
+
         mTvCategory.setText(mFindCategoryArray[Integer.parseInt(mType)]);
+
+        mMessageReceiver = new MessageReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AppConstants.ACTION_SOCKET_PUSH);
+        filter.addAction(AppConstants.ACTION_DELETE_FRIEND);
+        filter.addAction(AppConstants.ACTION_ADD_FRIEND);
+        registerReceiver(mMessageReceiver, filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mMessageReceiver);
     }
 
     @Override
@@ -181,29 +230,29 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
             case R.id.tv_train:
                 mTvCategory.setText(mFindCategoryArray[0]);
                 mType = TYPE_TRAIN;
-                findPerson(ACTION_REFRESH);
                 mLoadingBar.setVisibility(View.VISIBLE);
+                findPerson(ACTION_REFRESH);
                 closeCategoryLayout();
                 break;
             case R.id.tv_station:
                 mTvCategory.setText(mFindCategoryArray[1]);
                 mType = TYPE_STATION;
-                findPerson(ACTION_REFRESH);
                 mLoadingBar.setVisibility(View.VISIBLE);
+                findPerson(ACTION_REFRESH);
                 closeCategoryLayout();
                 break;
             case R.id.tv_line:
                 mTvCategory.setText(mFindCategoryArray[2]);
                 mType = TYPE_LINE;
-                findPerson(ACTION_REFRESH);
                 mLoadingBar.setVisibility(View.VISIBLE);
+                findPerson(ACTION_REFRESH);
                 closeCategoryLayout();
                 break;
             case R.id.tv_nearby:
                 mTvCategory.setText(mFindCategoryArray[3]);
                 mType = TYPE_NEARBY;
-                findPerson(ACTION_REFRESH);
                 mLoadingBar.setVisibility(View.VISIBLE);
+                findPerson(ACTION_REFRESH);
                 closeCategoryLayout();
                 break;
             case R.id.iv_close:
@@ -238,21 +287,23 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
     }
 
     private void findPerson(String action) {
+        mTvLocation.setVisibility(View.GONE);
+        mTvCategory.setTextSize(16);
         switch (mType) {
             case TYPE_TRAIN:
-                if (!isNetworkOk()) return;
-                if (!isHeikuaiNetwork()) return;
-                break;
             case TYPE_LINE:
-                if (!isNetworkOk()) return;
-                if (!isHeikuaiNetwork()) return;
-                break;
             case TYPE_STATION:
-                if (!isNetworkOk()) return;
-                if (!isHeikuaiNetwork()) return;
+                if (!isNetworkOk() || !isHeikuaiNetwork()) {
+                    return;
+//                } else {
+//                    mTvLocation.setVisibility(View.VISIBLE);
+//                    mTvCategory.setTextSize(14);
+                }
                 break;
             case TYPE_NEARBY:
-                if (!isNetworkOk()) return;
+                if (!isNetworkOk()) {
+                    return;
+                }
                 break;
         }
 
@@ -272,28 +323,41 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
                     FindPersonResponseObject object = gson.fromJson(response, FindPersonResponseObject.class);
                     ResponseHeader header = object.header;
                     if (AppConstants.RET_OK.equals(header.ret)) {
-                        mLocation = object.body.location;
+                        mLine = object.body.line;
+                        mStation = object.body.station;
                         if (ACTION_REFRESH.equals(mAction)) {
                             refreshPerson(object.body);
                         } else {
                             loadMorePerson(object.body);
                         }
-                    } else if ("36162".equals(header.errCode)) {
+                    } else if ("36162".equals(header.errCode) || "38162".equals(header.errCode)) {
                         mLlHint.setVisibility(View.VISIBLE);
                         mIvHint.setImageResource(R.drawable.ic_in_train);
-                        mTvHint.setText(R.string.social_in_train);
-                    } else if ("36163".equals(header.errCode)) {
+                        mTvHint1.setText(R.string.social_in_train);
+                        mTvHint2.setText(R.string.social_refresh);
+                        mIvTip.setVisibility(View.VISIBLE);
+                    } else if ("36163".equals(header.errCode) || "38163".equals(header.errCode)) {
                         mLlHint.setVisibility(View.VISIBLE);
                         mIvHint.setImageResource(R.drawable.ic_out_train);
-                        mTvHint.setText(R.string.social_out_train);
+                        mTvHint1.setText(R.string.social_out_train);
+                        mTvHint2.setText(R.string.social_refresh);
+                        mIvTip.setVisibility(View.VISIBLE);
+                    } else {
+                        ToastUtil.showToast(FindPersonActivity.this, "服务器开小差了，请稍后再试(" + header.errCode + ")");
+                        mPersonList.clear();
+                        mAdapter.notifyDataSetChanged();
+                        updateHint();
                     }
                 }
             }
 
             @Override
             public void onErrorResponse() {
-                Log.i("FindPersonActivity", "@@@#@onErrorResponse");
+                ToastUtil.showToast(FindPersonActivity.this, R.string.request_fail_warning);
                 mLoadingBar.setVisibility(View.GONE);
+                mPersonList.clear();
+                mAdapter.notifyDataSetChanged();
+                updateHint();
             }
         };
         WebServiceIf.findPerson(this, body, callback);
@@ -305,7 +369,10 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
         if (!NetworkUtil.isConnectFashionWiFi(wifiInfo)) {
             mLlHint.setVisibility(View.VISIBLE);
             mIvHint.setImageResource(R.drawable.ic_no_wifi);
-            mTvHint.setText(R.string.social_no_wifi);
+            mTvHint1.setText(R.string.social_no_wifi);
+            mTvHint2.setText("");
+            mIvTip.setVisibility(View.GONE);
+            mLoadingBar.setVisibility(View.GONE);
             return false;
         }
         return true;
@@ -315,7 +382,10 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
         if (!NetworkUtil.isNetAvailable(this)) {
             mLlHint.setVisibility(View.VISIBLE);
             mIvHint.setImageResource(R.drawable.ic_no_location);
-            mTvHint.setText(R.string.social_no_location);
+            mTvHint1.setText(R.string.social_no_location_1);
+            mTvHint2.setText(R.string.social_no_location_2);
+            mIvTip.setVisibility(View.GONE);
+            mLoadingBar.setVisibility(View.GONE);
             return false;
         }
         return true;
@@ -330,6 +400,7 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
             mPersonList.addAll(body.userList);
         }
         mAdapter.notifyDataSetChanged();
+        mListView.getRefreshableView().setSelection(0);
 
         updateHint();
     }
@@ -341,22 +412,51 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
         } else {
             mListView.setVisibility(View.GONE);
             mLlHint.setVisibility(View.VISIBLE);
-            mIvHint.setImageResource(R.drawable.ic_change_posture);
-            mTvHint.setText(R.string.social_change_posture);
-        }
-        if (mType.equals(TYPE_TRAIN) || mType.equals(TYPE_NEARBY)) {
-            mTvLocation.setVisibility(View.GONE);
-            mTvCategory.setTextSize(16);
-        } else if (mType.equals(TYPE_STATION) || mType.equals(TYPE_LINE)) {
-            mTvLocation.setVisibility(View.VISIBLE);
-            mTvCategory.setTextSize(14);
-            if (!TextUtils.isEmpty(mLocation)) {
-                mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line1);
-                mTvLocation.setText(mLocation);
+            if (mAge.equals("不限") && mSex.equals("不限")) {
+                mIvHint.setImageResource(R.drawable.ic_change_posture);
+                mTvHint1.setText(R.string.social_change_posture);
+                mTvHint2.setText(R.string.social_refresh);
+                mIvTip.setVisibility(View.GONE);
             } else {
-                mTvLocation.setBackgroundResource(R.drawable.bg_location);
-                mTvLocation.setText("");
+                mIvHint.setImageResource(R.drawable.ic_filter);
+                mTvHint1.setText(R.string.social_no_person);
+                mTvHint2.setText(R.string.social_filter_hint);
+                mIvTip.setVisibility(View.GONE);
             }
+        }
+        switch (mType) {
+            case TYPE_STATION:
+                if (!TextUtils.isEmpty(mStation)) {
+                    mTvLocation.setVisibility(View.VISIBLE);
+                    mTvCategory.setTextSize(14);
+                    if ("一号线".equals(mLine)) {
+                        mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line1);
+                        mTvLocation.setText(mStation);
+                    } else if ("六号线".equals(mLine)) {
+                        mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line6);
+                        mTvLocation.setText(mStation);
+                    } else {
+                        mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line1);
+                        mTvLocation.setText(mStation);
+                    }
+                }
+                break;
+            case TYPE_LINE:
+                if (!TextUtils.isEmpty(mLine)) {
+                    mTvLocation.setVisibility(View.VISIBLE);
+                    mTvCategory.setTextSize(14);
+                    if ("一号线".equals(mLine)) {
+                        mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line1);
+                        mTvLocation.setText(mLine);
+                    } else if ("六号线".equals(mLine)) {
+                        mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line6);
+                        mTvLocation.setText(mLine);
+                    } else {
+                        mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line1);
+                        mTvLocation.setText(mLine);
+                    }
+                }
+                break;
         }
     }
 
@@ -379,8 +479,11 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
                         mFilterDialog.dismiss();
                         mSex = sex;
                         mAge = age;
-                        findPerson(ACTION_REFRESH);
+                        mAction = ACTION_REFRESH;
                         mLoadingBar.setVisibility(View.VISIBLE);
+                        findPerson(ACTION_REFRESH);
+                        SharedPreferencesInfo.setTagString(FindPersonActivity.this, SharedPreferencesInfo.SOCIAL_FILTER_SEX, mSex);
+                        SharedPreferencesInfo.setTagString(FindPersonActivity.this, SharedPreferencesInfo.SOCIAL_FILTER_AGE, mAge);
                         break;
                     case R.id.tv_cancel:
                         mFilterDialog.dismiss();
@@ -396,6 +499,20 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
         Intent intent = new Intent(this, PersonInfoActivity.class);
         intent.putExtra("person", mPersonList.get(position - 1));
         startActivity(intent);
+    }
+
+    private class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (AppConstants.ACTION_DELETE_FRIEND.equals(action)) {
+                mLoadingBar.setVisibility(View.VISIBLE);
+                findPerson(ACTION_REFRESH);
+            } else if (AppConstants.ACTION_ADD_FRIEND.equals(action)) {
+                mLoadingBar.setVisibility(View.VISIBLE);
+                findPerson(ACTION_REFRESH);
+            }
+        }
     }
 
     public class SpringInterpolator implements Interpolator {

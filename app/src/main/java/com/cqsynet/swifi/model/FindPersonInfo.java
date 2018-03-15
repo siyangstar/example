@@ -19,6 +19,7 @@ public class FindPersonInfo implements Parcelable {
     public String isFriend;          // 0: 不是; 1: 是
     public String areaCode;
     public String isSameLocation;    // 是否在同一个位置;0: 不在; 1:同列车; 2: 同站台; 3: 同线路
+    public String distance;
 
     @Override
     public int describeContents() {
@@ -37,6 +38,7 @@ public class FindPersonInfo implements Parcelable {
         dest.writeString(this.isFriend);
         dest.writeString(this.areaCode);
         dest.writeString(this.isSameLocation);
+        dest.writeString(this.distance);
     }
 
     public FindPersonInfo() {
@@ -53,6 +55,7 @@ public class FindPersonInfo implements Parcelable {
         this.isFriend = in.readString();
         this.areaCode = in.readString();
         this.isSameLocation = in.readString();
+        this.distance = in.readString();
     }
 
     public static final Parcelable.Creator<FindPersonInfo> CREATOR = new Parcelable.Creator<FindPersonInfo>() {

@@ -34,7 +34,7 @@
             android:layout_gravity="center_vertical|end"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:text="编辑"
+            android:text="选择"
             android:textColor="@color/text1"
             android:textSize="14sp" />
 

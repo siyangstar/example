@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2014 重庆尚渝
+ * 版权所有
+ *
+ * 功能描述：好友申请的操作界面
+ *
+ *
+ * 创建标识：sayaki 20171128
+ */
 package com.cqsynet.swifi.activity.social;
 
 import android.app.Activity;
@@ -6,6 +15,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cqsynet.swifi.AppConstants;
@@ -36,6 +46,7 @@ public class FriendReplyActivity extends HkActivity {
 
     private FriendApplyInfo mFriendApplyInfo;
     private TextView mTvRemark;
+    private LinearLayout mLlBottom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +54,8 @@ public class FriendReplyActivity extends HkActivity {
         setContentView(R.layout.activity_friend_reply);
 
         mFriendApplyInfo = getIntent().getParcelableExtra("friendApplyInfo");
+        ContactDao contactDao = ContactDao.getInstance(this);
+        UserInfo userInfo = contactDao.queryUser(mFriendApplyInfo.userAccount);
 
         ImageView ivBack = findViewById(R.id.iv_back);
         ivBack.setOnClickListener(new View.OnClickListener() {
@@ -78,17 +91,28 @@ public class FriendReplyActivity extends HkActivity {
             tvMessage.setText(mFriendApplyInfo.content);
         }
         mTvRemark = findViewById(R.id.tv_remark);
+        if (userInfo != null && !TextUtils.isEmpty(userInfo.remark)) {
+            mTvRemark.setText(userInfo.remark);
+        }
         mTvRemark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FriendReplyActivity.this, RemarkActivity.class);
                 intent.putExtra("friendAccount", mFriendApplyInfo.userAccount);
                 intent.putExtra("nickname", mFriendApplyInfo.nickname);
-                intent.putExtra("action", "set");
-                startActivityForResult(intent, SET_REMARK_REQUEST);
+                if ("0".equals(mFriendApplyInfo.replyStatus)) {
+                    intent.putExtra("action", "set");
+                    startActivityForResult(intent, SET_REMARK_REQUEST);
+                } else if ("1".equals(mFriendApplyInfo.replyStatus)){
+                    intent.putExtra("action", "modify");
+                    startActivityForResult(intent, SET_REMARK_REQUEST);
+                } else {
+                    ToastUtil.showToast(FriendReplyActivity.this, "已拒绝的好友申请不能设置备注哦");
+                }
             }
         });
 
+        mLlBottom = findViewById(R.id.ll_bottom);
         TextView tvAgree = findViewById(R.id.tv_agree);
         tvAgree.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +144,7 @@ public class FriendReplyActivity extends HkActivity {
                     complainIntent.putExtra("url", AppConstants.COMPLAIN_PAGE);
                     complainIntent.putExtra("friendAccount", mFriendApplyInfo.userAccount);
                     complainIntent.putExtra("userAccount", SharedPreferencesInfo.getTagString(FriendReplyActivity.this, SharedPreferencesInfo.ACCOUNT));
-                    complainIntent.putExtra("complainType", "chat");
+                    complainIntent.putExtra("complainType", "social");
                     startActivity(complainIntent);
                 }
             }
@@ -133,6 +157,7 @@ public class FriendReplyActivity extends HkActivity {
             tvHint.setVisibility(View.VISIBLE);
             if ("1".equals(mFriendApplyInfo.replyStatus)) {
                 tvHint.setText("已同意");
+                mLlBottom.setVisibility(View.GONE);
             } else if ("2".equals(mFriendApplyInfo.replyStatus)) {
                 tvHint.setText("已拒绝");
             } else if ("3".equals(mFriendApplyInfo.replyStatus)) {
@@ -179,6 +204,7 @@ public class FriendReplyActivity extends HkActivity {
                         friendApplyInfo.replyStatus = "1";
                         friendApplyDao.insert(friendApplyInfo, SharedPreferencesInfo.getTagString(FriendReplyActivity.this, SharedPreferencesInfo.ACCOUNT));
                     }
+                    sendBroadcast(new Intent(AppConstants.ACTION_MODIFY_REMARK));
                 } else if (type.equals("1")) {
                     FriendApplyDao friendApplyDao = FriendApplyDao.getInstance(FriendReplyActivity.this);
                     FriendApplyInfo friendApplyInfo = friendApplyDao.query(mFriendApplyInfo.userAccount,

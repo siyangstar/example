@@ -137,7 +137,7 @@ public class FriendApplyDao {
         String sql;
         sql = "select count(*) from " + DBHelper.FRIEND_APPLY_TABLE + " where " + DBHelper.APPLY_COL_READ_STATUS+ "=0 and "
                 + DBHelper.CHAT_COL_OWNER + "=\"" + SharedPreferencesInfo.getTagString(mContext, SharedPreferencesInfo.ACCOUNT) + "\"";
-        Cursor cur = db.getWritableDatabase().rawQuery(sql, null);
+        Cursor cur = db.getReadableDatabase().rawQuery(sql, null);
         if (cur.moveToFirst()) {
             count = (int) cur.getLong(0);
         }
