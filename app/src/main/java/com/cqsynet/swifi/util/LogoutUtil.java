@@ -47,13 +47,15 @@ public class LogoutUtil {
 
         SharedPreferencesInfo.setTagInt(context, SharedPreferencesInfo.IS_LOGIIN, 0);
         SharedPreferencesInfo.removeData(context, SharedPreferencesInfo.ACCOUNT);
-        SharedPreferencesInfo.removeData(context, SharedPreferencesInfo.PUSH_TAG_LIST);
         SharedPreferencesInfo.removeData(context, SharedPreferencesInfo.READED);
         SharedPreferencesInfo.removeData(context, SharedPreferencesInfo.RSA_KEY);
         SharedPreferencesInfo.removeData(context, SharedPreferencesInfo.PHONE_NUM);
         SharedPreferencesInfo.removeData(context, SharedPreferencesInfo.CHANNELS);
         Globals.g_userInfo = null;
         Globals.g_isUpdateUserGroup = false;
+
+        SharedPreferencesInfo.setTagBoolean(context, SharedPreferencesInfo.NEW_COMMENT_REPLY, false);
+        SharedPreferencesInfo.setTagInt(context, SharedPreferencesInfo.COMMENT_REPLY_COUNT, 0);
 
         Intent timerIntent = new Intent(context, TimerService.class);
         context.getApplicationContext().startService(timerIntent);

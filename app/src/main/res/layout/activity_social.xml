@@ -11,7 +11,7 @@
         android:background="@color/white">
 
         <ImageView
-            android:id="@+id/iv_back"
+            android:id="@+id/ivBack_activity_social"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:contentDescription="@null"
@@ -19,22 +19,21 @@
             android:src="@drawable/btn_back_green_selector" />
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tvTitle_activity_social"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/text1"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_size_largexx" />
 
-        <TextView
-            android:id="@+id/tv_modify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/ivMine_activity_social"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginRight="8dp"
-            android:text="修改资料"
-            android:textColor="@color/text1"
-            android:textSize="14sp" />
+            android:contentDescription="@null"
+            android:scaleType="center"
+            android:src="@drawable/ic_social_mine" />
 
         <View
             android:layout_width="match_parent"

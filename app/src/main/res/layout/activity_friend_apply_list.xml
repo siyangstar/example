@@ -19,13 +19,12 @@
             android:src="@drawable/btn_back_green_selector" />
 
         <TextView
-            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="好友请求"
             android:textColor="@color/text1"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_size_largexx" />
 
         <TextView
             android:id="@+id/tv_edit"
@@ -36,7 +35,7 @@
             android:layout_marginRight="16dp"
             android:text="选择"
             android:textColor="@color/text1"
-            android:textSize="14sp" />
+            android:textSize="@dimen/text_size_large" />
 
         <View
             android:layout_width="match_parent"

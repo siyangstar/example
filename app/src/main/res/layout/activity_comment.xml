@@ -37,7 +37,7 @@
                     android:layout_gravity="center"
                     android:text="@string/comment_list"
                     android:textColor="@color/text1"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/text_size_largexx" />
 
                 <View
                     android:layout_width="match_parent"

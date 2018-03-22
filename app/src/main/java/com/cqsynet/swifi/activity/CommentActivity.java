@@ -97,26 +97,6 @@ public class CommentActivity extends HkActivity implements
     private Dialog mDialog;
     private MyHandler mHandler = new MyHandler(this);
 
-    private static class MyHandler extends Handler {
-
-        private WeakReference<CommentActivity> weakReference;
-
-        public MyHandler(CommentActivity activity) {
-            weakReference = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            CommentActivity activity = weakReference.get();
-            if (msg.what == MSG_DISMISS_DIALOG) {
-                activity.dismissProgressDialog();
-                if (activity.mDialog != null && activity.mDialog.isShowing()) {
-                    activity.mDialog.dismiss();
-                }
-            }
-        }
-    }
-
     public static void launch(Context context, String id, String status, String message) {
         Intent intent = new Intent();
         intent.setClass(context, CommentActivity.class);
@@ -578,5 +558,25 @@ public class CommentActivity extends HkActivity implements
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         showActionDialog(mComments.get(position - 1));
         return true;
+    }
+
+    private static class MyHandler extends Handler {
+
+        private WeakReference<CommentActivity> weakReference;
+
+        public MyHandler(CommentActivity activity) {
+            weakReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            CommentActivity activity = weakReference.get();
+            if (msg.what == MSG_DISMISS_DIALOG) {
+                activity.dismissProgressDialog();
+                if (activity.mDialog != null && activity.mDialog.isShowing()) {
+                    activity.mDialog.dismiss();
+                }
+            }
+        }
     }
 }

@@ -154,11 +154,16 @@ public class ChatMsgDao {
         return list;
     }
 
+    /**
+     * 查询和某个朋友的所有未读聊天记录
+     * @param userAccount
+     * @param category
+     * @return
+     */
     public int queryUnReadMsgCount(String userAccount, String category) {
         int count = 0;
         DBHelper db = new DBHelper(mContext);
-        String sql;
-        sql = "select count(*) from " + DBHelper.CHAT_TABLE + " where " + DBHelper.CHAT_COL_ACCOUNT + "=\"" + userAccount
+        String sql = "select count(*) from " + DBHelper.CHAT_TABLE + " where " + DBHelper.CHAT_COL_ACCOUNT + "=\"" + userAccount
                 + "\" and " + DBHelper.CHAT_COL_READ_STATUS + "=0 and " + DBHelper.CHAT_COL_CATEGORY + "=\"" + category + "\" and "
                 + DBHelper.CHAT_COL_OWNER + "=\"" + SharedPreferencesInfo.getTagString(mContext, SharedPreferencesInfo.ACCOUNT) + "\"";
         Cursor cur = db.getWritableDatabase().rawQuery(sql, null);
@@ -170,10 +175,15 @@ public class ChatMsgDao {
         return count;
     }
 
-    public int queryAllUnReadMsgCount() {
+    /**
+     * 查询所有未读信息
+     * @param category 类型 0:漂流瓶 1:好友聊天
+     * @return
+     */
+    public int queryAllUnReadMsgCount(String category) {
         int count = 0;
         DBHelper db = new DBHelper(mContext);
-        String sql = "select count(*) from " + DBHelper.CHAT_TABLE + " where " + DBHelper.CHAT_COL_READ_STATUS + "=0 and "
+        String sql = "select count(*) from " + DBHelper.CHAT_TABLE + " where " + DBHelper.CHAT_COL_READ_STATUS + "=0 and " + DBHelper.CHAT_COL_CATEGORY + "=\"" + category + "\" and "
                 + DBHelper.CHAT_COL_OWNER + "=\"" + SharedPreferencesInfo.getTagString(mContext, SharedPreferencesInfo.ACCOUNT) + "\"";
         Cursor cur = db.getReadableDatabase().rawQuery(sql, null);
         if (cur.moveToFirst()) {

@@ -255,6 +255,10 @@ public class AppConstants {
     public static final String IF_SUBMIT_COMMENT = "IF00391003";
     // 点赞
     public static final String IF_LIKE = "IF00391004";
+    // 评论回复
+    public static final String IF_COMMENT_REPLY = "IF00391005";
+    // 我的评论
+    public static final String IF_MY_COMMENT = "IF00391006";
 
     /*******社交***********/
     // 捡瓶子
@@ -316,4 +320,5 @@ public class AppConstants {
     public static final String PUSH_BOTTLE = "13"; // 漂流瓶消息
     public static final String PUSH_FRIEND_APPLY = "14"; // 好友申请消息
     public static final String PUSH_CHAT = "15"; // 好友聊天消息
+    public static final String PUSH_COMMENT_REPLY = "16"; // 评论回复消息
 }

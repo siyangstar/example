@@ -25,7 +25,7 @@
             android:layout_gravity="center"
             android:text="@string/my_collect"
             android:textColor="@color/text1"
-            android:textSize="18sp" />
+            android:textSize="@dimen/text_size_largexx" />
 
         <LinearLayout
             android:layout_width="wrap_content"

@@ -41,7 +41,6 @@ public class SettingActivity extends HkActivity implements OnClickListener {
 
 	private TitleBar mTitleBar;
 	private TextView mTvCacheSize;
-	private ImageView mIvNewSuggest;
 	private ImageView mIvUpdate;
 	
 	@Override
@@ -52,7 +51,6 @@ public class SettingActivity extends HkActivity implements OnClickListener {
 		mTitleBar = findViewById(R.id.titlebar_activity_setting);
 		mTitleBar.setTitle("设置");
 		mTitleBar.setLeftIconClickListener(this);
-		mIvNewSuggest = findViewById(R.id.ivNewSuggest_setting);
 		findViewById(R.id.btnLogout_setting).setOnClickListener(this);
 		mTvCacheSize = findViewById(R.id.tvCacheSize_activity_setting);
 		getCacheSize();
@@ -64,11 +62,6 @@ public class SettingActivity extends HkActivity implements OnClickListener {
 	protected void onResume() {
 		super.onResume();
 		SharedPreferencesInfo.setTagBoolean(this, SharedPreferencesInfo.NEW_SETTING, false);
-		if(SharedPreferencesInfo.getTagBoolean(this, SharedPreferencesInfo.NEW_SUGGEST, false)) {
-			mIvNewSuggest.setVisibility(View.VISIBLE);
-		} else {
-			mIvNewSuggest.setVisibility(View.GONE);
-		}
 		if (SharedPreferencesInfo.getTagBoolean(SettingActivity.this, SharedPreferencesInfo.NEW_VERSION, false)) {
 			mIvUpdate.setVisibility(View.VISIBLE); // 如果是最新版本，则不提示红点
 		} else {
@@ -177,16 +170,7 @@ public class SettingActivity extends HkActivity implements OnClickListener {
 		Intent intent = new Intent(this, UpdatePwdActivity.class);
 		startActivity(intent);
 	}
-	
-	
-	/**
-	 * 意见反馈
-	 * @param v
-	 */
-	public void submitSuggest(View v) {
-		Intent intent = new Intent(this, SuggestActivity.class);
-		startActivity(intent);
-	}
+
 	
 	/**
 	 * 关于我们

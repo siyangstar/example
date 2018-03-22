@@ -41,7 +41,6 @@ public class SharedPreferencesInfo {
     public static final String IGNORE_VERSION = "ignoreVersion"; // 忽略升级的版本号
     public static final String SHOP_DB_USER_ID = "shop_user_id";
     public static final String IS_PUSHMESSAGE_RECEIVE = "is_pushmessage_receive";//是否接收推送消息
-    public static final String PUSH_TAG_LIST = "push_tag_list";//存储从百度云服务器查询出的所有标签
     public static final String READED = "readed"; //已读内容标识
     public static final String COLLECT_LIST_NEWS = "collect_list_news";
     public static final String SUGGEST = "suggest";//意见反馈，一段文字三张图，","隔开
@@ -49,6 +48,8 @@ public class SharedPreferencesInfo {
     public static final String FREE_WIFI_TIME = "free_wifi_time";//最后一次点击我要上网或者续时后,还剩余的可用上网时间
     public static final String SHOP_AUTH = "shop_auth";//判断是否可访问电商,三个参数：ret&time&user
     public static final String NEW_MESSAGE = "new_message"; //发现中"消息"是否有小红点
+    public static final String NEW_COMMENT_REPLY = "new_comment_reply"; //发现中"评论"是否有红点提示
+    public static final String COMMENT_REPLY_COUNT = "comment_reply_count"; //评论回复的新消息条数
     public static final String NEW_SETTING = "new_setting"; //发现中"设置"是否有小红点
     public static final String NEW_VERSION = "new_version"; //应用更新是否有小红点
     public static final String NEW_SUGGEST = "new_suggest"; //设置中"意见反馈"是否有小红点

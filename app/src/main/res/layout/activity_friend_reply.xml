@@ -25,7 +25,7 @@
             android:layout_gravity="center"
             android:text="好友申请"
             android:textColor="@color/text1"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_size_largexx" />
     </FrameLayout>
 
     <LinearLayout

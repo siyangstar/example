@@ -67,9 +67,13 @@ public class FriendApplyDao {
 
     public void delete(String userAccount, String owner) {
         DBHelper db = new DBHelper(mContext);
-        db.getWritableDatabase().delete(DBHelper.FRIEND_APPLY_TABLE,
-                DBHelper.APPLY_COL_ACCOUNT + "=? and " + DBHelper.APPLY_COL_OWNER + "=?",
-                new String[]{userAccount, owner});
+        db.getWritableDatabase().delete(DBHelper.FRIEND_APPLY_TABLE, DBHelper.APPLY_COL_ACCOUNT + "=? and " + DBHelper.APPLY_COL_OWNER + "=?", new String[]{userAccount, owner});
+        db.close();
+    }
+
+    public void deleteAll(String owner) {
+        DBHelper db = new DBHelper((mContext));
+        db.getWritableDatabase().delete(DBHelper.FRIEND_APPLY_TABLE, DBHelper.FRIENDS_COL_OWNER + "=?", new String[]{owner});
         db.close();
     }
 

@@ -34,6 +34,7 @@ import com.cqsynet.swifi.R;
 import com.cqsynet.swifi.activity.ChatActivity;
 import com.cqsynet.swifi.activity.GalleryActivity;
 import com.cqsynet.swifi.activity.LoginActivity;
+import com.cqsynet.swifi.activity.MyCommentActivity;
 import com.cqsynet.swifi.activity.ReadMessageActivity;
 import com.cqsynet.swifi.activity.SuggestListActivity;
 import com.cqsynet.swifi.activity.TopicActivity;
@@ -494,7 +495,7 @@ public class PushService extends Service {
                         }
                     }
                 }
-            } else if (type.equals(AppConstants.PUSH_FRIEND_APPLY)) {
+            } else if (type.equals(AppConstants.PUSH_FRIEND_APPLY)) {  //好友申请
                 Gson gson = new Gson();
                 ArrayList<FriendApplyInfo> applyInfos = gson.fromJson(content, new TypeToken<ArrayList<FriendApplyInfo>>() {
                 }.getType());
@@ -503,6 +504,13 @@ public class PushService extends Service {
                         handleFriendApplyMsg(applyInfo);
                     }
                 }
+            } else if (type.equals(AppConstants.PUSH_COMMENT_REPLY)) {  //评论回复
+                int commentReplyCount = SharedPreferencesInfo.getTagInt(this, SharedPreferencesInfo.COMMENT_REPLY_COUNT) + 1;
+                SharedPreferencesInfo.setTagInt(this, SharedPreferencesInfo.COMMENT_REPLY_COUNT, commentReplyCount);
+                SharedPreferencesInfo.setTagBoolean(this, SharedPreferencesInfo.NEW_COMMENT_REPLY, true);
+                jumpIntent.setClass(this, MyCommentActivity.class);
+                jumpIntent.putExtra("from", "notification");
+                sendNotify(this, title, content, jumpIntent);
             }
         } catch (JSONException e) {
             e.printStackTrace();

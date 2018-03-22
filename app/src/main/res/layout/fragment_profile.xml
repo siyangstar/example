@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_grey">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/bg_grey">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
             <LinearLayout
                 android:id="@+id/llHead_find"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="210dp"
                 android:background="@color/green"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -28,93 +29,24 @@
                     android:id="@+id/ivHeadImg_find"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
-                    android:src="@drawable/icon_profile_default_round" />
+                    android:src="@drawable/icon_profile_default_round"/>
 
                 <TextView
                     android:id="@+id/tvName_find"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:drawablePadding="4dp"
                     android:drawableRight="@drawable/edit"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_largex" />
+                    android:textSize="@dimen/text_size_largex"/>
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/line" />
-
-            <LinearLayout
-                android:id="@+id/llMyLottery_find"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/layout_selecter"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="20dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableLeft="@drawable/found_my_lottery"
-                    android:drawablePadding="6dp"
-                    android:text="@string/my_lottery"
-                    android:textColor="@color/text2"
-                    android:textSize="@dimen/text_size_large" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/more" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/line" />
-
-            <LinearLayout
-                android:id="@+id/llCollection_find"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/layout_selecter"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="20dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableLeft="@drawable/collect"
-                    android:drawablePadding="6dp"
-                    android:text="@string/my_collect"
-                    android:textColor="@color/text2"
-                    android:textSize="@dimen/text_size_large" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/more" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/line" />
 
             <LinearLayout
                 android:id="@+id/llMessage_find"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -123,14 +55,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/found_my_message"
+                    android:drawableLeft="@drawable/find_message"
                     android:drawablePadding="6dp"
                     android:text="@string/my_message"
                     android:textColor="@color/text2"
-                    android:textSize="@dimen/text_size_large" />
+                    android:textSize="@dimen/text_size_large"/>
 
-                <Button
-                    android:id="@+id/btnRemind_find"
+                <TextView
+                    android:id="@+id/tvMessageRemind_find"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
@@ -139,32 +71,151 @@
                     android:minWidth="20dp"
                     android:textColor="@color/white"
                     android:textSize="12sp"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"
+                    tools:text="12"
+                    tools:visibility="visible"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/more" />
+                    android:src="@drawable/more"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/line" />
+                android:background="@color/line"/>
+
+            <LinearLayout
+                android:id="@+id/llComment_find"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/layout_selecter"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/find_comment"
+                    android:drawablePadding="6dp"
+                    android:text="@string/comment"
+                    android:textColor="@color/text2"
+                    android:textSize="@dimen/text_size_large"/>
+
+                <TextView
+                    android:id="@+id/tvCommentRemind_find"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/round_rect_red"
+                    android:gravity="center"
+                    android:minWidth="20dp"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:visibility="invisible"
+                    tools:text="12"
+                    tools:visibility="visible"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/line"/>
+
+            <LinearLayout
+                android:id="@+id/llCollection_find"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/layout_selecter"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/find_collection"
+                    android:drawablePadding="6dp"
+                    android:text="@string/my_collect"
+                    android:textColor="@color/text2"
+                    android:textSize="@dimen/text_size_large"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/line"/>
+
+            <LinearLayout
+                android:id="@+id/llMyLottery_find"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/layout_selecter"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/find_lottery"
+                    android:drawablePadding="6dp"
+                    android:text="@string/my_lottery"
+                    android:textColor="@color/text2"
+                    android:textSize="@dimen/text_size_large"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/line"/>
+
 
             <LinearLayout
                 android:id="@+id/llJianPaHuo_find"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -174,64 +225,30 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="@drawable/found_my_jianpahuo"
+                    android:drawableLeft="@drawable/find_jianpahuo"
                     android:drawablePadding="6dp"
                     android:text="@string/jianpahuo"
                     android:textColor="@color/text2"
-                    android:textSize="@dimen/text_size_large" />
+                    android:textSize="@dimen/text_size_large"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/more" />
+                    android:src="@drawable/more"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/line" />
+                android:background="@color/line"/>
 
             <LinearLayout
-                android:id="@+id/llApp_find"
+                android:id="@+id/llSetting_find"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/layout_selecter"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="20dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableLeft="@drawable/found_my_app"
-                    android:drawablePadding="6dp"
-                    android:text="@string/app"
-                    android:textColor="@color/text2"
-                    android:textSize="@dimen/text_size_large" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/more" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/line"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:id="@+id/btnSet_find"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -240,38 +257,91 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/found_my_set"
+                    android:drawableLeft="@drawable/find_setting"
                     android:drawablePadding="6dp"
                     android:text="@string/setting"
                     android:textColor="@color/text2"
-                    android:textSize="@dimen/text_size_large" />
+                    android:textSize="@dimen/text_size_large"/>
 
                 <ImageView
-                    android:id="@+id/ivNewSet_find"
+                    android:id="@+id/ivSettingRemind_find"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/new_message_num_bg" />
+                    android:src="@drawable/new_message_num_bg"/>
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/more" />
+                    android:src="@drawable/more"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/line" />
+                android:background="@color/line"/>
+
+
+            <LinearLayout
+                android:id="@+id/llSuggestiong_find"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/layout_selecter"
+                android:gravity="center_vertical"
+                android:onClick="submitSuggest"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/find_suggestion"
+                    android:drawablePadding="6dp"
+                    android:text="用户反馈"
+                    android:textColor="@color/text2"
+                    android:textSize="@dimen/text_size_large"/>
+
+                <ImageView
+                    android:id="@+id/ivSuggestRemind_find"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/new_message_num_bg"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:contentDescription="@string/my_account"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/line"/>
+            
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp"/>
         </LinearLayout>
     </ScrollView>
 
@@ -295,7 +365,7 @@
             android:layout_height="wrap_content"
             android:padding="20dp"
             android:scaleType="fitXY"
-            android:src="@drawable/shake" />
+            android:src="@drawable/shake"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -303,7 +373,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/shake"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_largex" />
+            android:textSize="@dimen/text_size_largex"/>
     </LinearLayout>
 
 </FrameLayout>

@@ -298,9 +298,13 @@ public class HomeActivity extends BasicFragmentActivity implements OnClickListen
             findViewById(R.id.ivSnsMore_home).setVisibility(View.GONE);
         }
         //设置红点未读数量
-        int chatMsgCount = ChatMsgDao.getInstance(this).queryAllUnReadMsgCount();
-        int friendApplyMsgCount = FriendApplyDao.getInstance(this).queryUnReadApplyCount();
-        int count = chatMsgCount + friendApplyMsgCount;
+        int count = ChatMsgDao.getInstance(this).queryAllUnReadMsgCount("friend");
+        if(SharedPreferencesInfo.getTagBoolean(this, SharedPreferencesInfo.MSG_BOTTLE, true)) {
+            count += ChatMsgDao.getInstance(this).queryAllUnReadMsgCount("bottle");
+        }
+        if(SharedPreferencesInfo.getTagBoolean(this, SharedPreferencesInfo.MSG_FRIEND_APPLY, true)) {
+            count += FriendApplyDao.getInstance(this).queryUnReadApplyCount();
+        }
         if (count < 100) {
             mTvSnsHint.setText(count + "");
         } else {

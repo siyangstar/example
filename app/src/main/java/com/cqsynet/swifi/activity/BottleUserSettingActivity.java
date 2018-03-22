@@ -26,7 +26,6 @@ import com.cqsynet.swifi.model.UserInfo;
 import com.cqsynet.swifi.network.WebServiceIf;
 import com.cqsynet.swifi.util.SharedPreferencesInfo;
 import com.cqsynet.swifi.util.ToastUtil;
-import com.cqsynet.swifi.view.TitleBar;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -34,7 +33,6 @@ import org.json.JSONException;
 import java.io.File;
 
 public class BottleUserSettingActivity extends HkActivity implements View.OnClickListener {
-    private TitleBar mTitleBar;
     private ImageView mIvHead; // 头像
     private TextView mTvAge; // 生日
     private TextView mTvSex; // 性别
@@ -52,16 +50,14 @@ public class BottleUserSettingActivity extends HkActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottle_user_setting);
-        mTitleBar = findViewById(R.id.titlebar_activity_bottle_user_setting);
-        mTitleBar.setTitle(R.string.user_info);
-        mTitleBar.setRightIcon(R.drawable.btn_enter_selector);
-        mTitleBar.findViewById(R.id.ivBack_titlebar_layout).setOnClickListener(new View.OnClickListener() {
+
+        findViewById(R.id.ivBack_activity_bottle_user_setting).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 finish();
             }
         });
-        mTitleBar.findViewById(R.id.ivMenu_titlebar_layout).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.tvSave_activity_bottle_user_setting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 save();

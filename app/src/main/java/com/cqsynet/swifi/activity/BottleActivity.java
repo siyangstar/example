@@ -1398,7 +1398,7 @@ public class BottleActivity extends HkActivity implements OnClickListener, Senso
     private void refreshRedPoint() {
         //设置红点未读数量
         ChatMsgDao chatMsgDao = ChatMsgDao.getInstance(BottleActivity.this);
-        int count = chatMsgDao.queryUnReadMsgCount("", "bottle");
+        int count = chatMsgDao.queryAllUnReadMsgCount("bottle");
         if (count < 100) {
             mTvRedPoint.setText(count + "");
         } else {

@@ -12,6 +12,7 @@ package com.cqsynet.swifi.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -21,16 +22,7 @@ import android.widget.TextView;
 import com.cqsynet.swifi.R;
 import com.cqsynet.swifi.util.ToastUtil;
 import com.cqsynet.swifi.view.LoginInputField;
-import com.cqsynet.swifi.view.TitleBar;
 
-/**
- * 个人中心文本输入页面
- *
- * @param title - String 标题
- * @param value - String 原有文本
- * @author duxl
- * @return data - String 返回文本
- */
 public class UserCenterInputActivity extends HkActivity implements OnClickListener {
 
     private ImageView mIvBack;
@@ -71,10 +63,15 @@ public class UserCenterInputActivity extends HkActivity implements OnClickListen
                 finish();
                 break;
             case R.id.tv_save:
-                Intent intent = new Intent();
-                intent.putExtra("data", mEtValue.getText().toString().trim());
-                setResult(Activity.RESULT_OK, intent);
-                finish();
+                String value = mEtValue.getText().toString().trim();
+                if(TextUtils.isEmpty(value)) {
+                    ToastUtil.showToast(this, "不能为空");
+                } else {
+                    Intent intent = new Intent();
+                    intent.putExtra("data", value);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }
                 break;
         }
     }

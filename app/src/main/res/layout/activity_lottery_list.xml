@@ -35,7 +35,7 @@
             android:layout_gravity="center"
             android:text="中奖列表"
             android:textColor="@color/text2"
-            android:textSize="20sp" />
+            android:textSize="@dimen/text_size_largexx" />
     </FrameLayout>
 
     <com.cqsynet.swifi.view.SlidingPagerTabStrip

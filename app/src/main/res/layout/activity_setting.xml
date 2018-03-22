@@ -96,57 +96,10 @@
                 android:layout_height="1px"
                 android:background="@color/line"/>
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/layout_selecter"
-                android:gravity="center_vertical"
-                android:onClick="submitSuggest"
-                android:orientation="horizontal"
-                android:paddingLeft="20dp">
-
-                <TextView
-                    style="@style/setting_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="意见反馈"
-                    android:textColor="@color/text2"
-                    android:textSize="@dimen/text_size_large"/>
-
-                <ImageView
-                    android:id="@+id/ivNewSuggest_setting"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/new_message_num_bg"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:contentDescription="@string/my_account"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/more"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/line"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:onClick="about"

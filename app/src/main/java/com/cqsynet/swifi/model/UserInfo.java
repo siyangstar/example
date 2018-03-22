@@ -68,7 +68,7 @@ public class UserInfo extends RequestBody implements Serializable {
 
 	public String remark; // 备注
 
-	public String setting = "1"; //是否需要打开设置
+	public String setting = "0"; //是否需要打开设置
 
 	public String lock = "0"; //是否被冻结
 

@@ -9,20 +9,26 @@
  */
 package com.cqsynet.swifi.activity.social;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.cqsynet.swifi.AppConstants;
 import com.cqsynet.swifi.R;
 import com.cqsynet.swifi.activity.BasicFragmentActivity;
 import com.cqsynet.swifi.activity.UserCenterActivity;
 import com.cqsynet.swifi.db.ChatMsgDao;
 import com.cqsynet.swifi.db.FriendApplyDao;
+import com.cqsynet.swifi.util.SharedPreferencesInfo;
 import com.cqsynet.swifi.view.NoSlidingViewPager;
 
 import java.util.ArrayList;
@@ -43,23 +49,22 @@ public class SocialActivity extends BasicFragmentActivity {
     private TextView mTvFindPerson;
     private ImageView mIvFriends;
     private TextView mTvFriends;
+    private MessageReceiver mMessageReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social);
 
-        mTvTitle = findViewById(R.id.tv_title);
+        mTvTitle = findViewById(R.id.tvTitle_activity_social);
         mTvTitle.setText("找人");
-        ImageView ivBack = findViewById(R.id.iv_back);
-        ivBack.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.ivBack_activity_social).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        TextView tvModify = findViewById(R.id.tv_modify);
-        tvModify.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.ivMine_activity_social).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SocialActivity.this, UserCenterActivity.class);
@@ -128,12 +133,37 @@ public class SocialActivity extends BasicFragmentActivity {
                 mViewPager.setCurrentItem(2, false);
             }
         });
+
+        mMessageReceiver = new MessageReceiver();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        int count = ChatMsgDao.getInstance(this).queryAllUnReadMsgCount() + FriendApplyDao.getInstance(this).queryUnReadApplyCount();
+        IntentFilter filter = new IntentFilter(AppConstants.ACTION_SOCKET_PUSH);
+        registerReceiver(mMessageReceiver, filter);
+        updateHint();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(mMessageReceiver != null) {
+            unregisterReceiver(mMessageReceiver);
+        }
+    }
+
+    /**
+     * 消息数量红点提示
+     */
+    private void updateHint() {
+        int count = ChatMsgDao.getInstance(this).queryAllUnReadMsgCount("friend");
+        if(SharedPreferencesInfo.getTagBoolean(this, SharedPreferencesInfo.MSG_BOTTLE, true)) {
+            count += ChatMsgDao.getInstance(this).queryAllUnReadMsgCount("bottle");
+        }
+        if(SharedPreferencesInfo.getTagBoolean(this, SharedPreferencesInfo.MSG_FRIEND_APPLY, true)) {
+            count += FriendApplyDao.getInstance(this).queryUnReadApplyCount();
+        }
         if (count < 100) {
             mTvMsgHint.setText(count + "");
         } else {
@@ -143,6 +173,22 @@ public class SocialActivity extends BasicFragmentActivity {
             mTvMsgHint.setVisibility(View.VISIBLE);
         } else {
             mTvMsgHint.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 广播接收消息内容
+     */
+    private class MessageReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(AppConstants.ACTION_SOCKET_PUSH)) {
+                String type = intent.getStringExtra("type");
+                if (!TextUtils.isEmpty(type) && (type.equals(AppConstants.PUSH_BOTTLE) || type.equals(AppConstants.PUSH_CHAT) || type.equals(AppConstants.PUSH_FRIEND_APPLY))) {
+                    updateHint();
+                }
+            }
         }
     }
 }

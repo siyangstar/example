@@ -73,7 +73,6 @@ dependencies {
     compile 'com.bugtags.library:bugtags-lib:2.3.1'
 }
 
-
 //应用 Bugtags 插件
 apply plugin: 'com.bugtags.library.plugin'
 

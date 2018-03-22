@@ -18,9 +18,6 @@ import android.content.Intent;
 import com.cqsynet.swifi.activity.WebActivity;
 import com.cqsynet.swifi.activity.YouzanWebActivity;
 
-/**
- * Created by USER-PC on 2016/7/29.
- */
 public class WebActivityDispatcher {
 
     private int mType;

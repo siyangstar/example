@@ -66,6 +66,7 @@ public class FriendsDao {
     public void deleteAll(String owner) {
         DBHelper db = new DBHelper((mContext));
         db.getWritableDatabase().delete(DBHelper.FRIENDS_TABLE, DBHelper.FRIENDS_COL_OWNER + "=?", new String[]{owner});
+        db.close();
     }
 
     public FriendsInfo query(String userAccount, String owner) {

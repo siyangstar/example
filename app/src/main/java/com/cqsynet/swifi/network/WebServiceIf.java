@@ -19,6 +19,7 @@ import com.cqsynet.swifi.model.CloseFreeWifiRequestBody;
 import com.cqsynet.swifi.model.CollectRemoveRequestBody;
 import com.cqsynet.swifi.model.CollectRequestBody;
 import com.cqsynet.swifi.model.CommentListRequestBody;
+import com.cqsynet.swifi.model.CommentReplyRequestBody;
 import com.cqsynet.swifi.model.CommentRequestBody;
 import com.cqsynet.swifi.model.DeleteBottleRequestBody;
 import com.cqsynet.swifi.model.FindPersonRequestBody;
@@ -606,8 +607,36 @@ public class WebServiceIf {
         excuteRequest(ctx, requestBody, AppConstants.COMMENT_SYS, AppConstants.IF_SUBMIT_COMMENT, "v1000", callbackIf);
     }
 
+    /**
+     * 赞
+     * @param ctx
+     * @param requestBody
+     * @param callbackIf
+     */
     public static void submitLike(Context ctx, LikeRequestBody requestBody, IResponseCallback callbackIf) {
         excuteRequest(ctx, requestBody, AppConstants.COMMENT_SYS, AppConstants.IF_LIKE, "v1000", callbackIf);
+    }
+
+    /**
+     * 获取评论回复列表
+     *
+     * @param ctx         调用页面的上下文
+     * @param requestBody 请求参数的数据类实例
+     * @param callbackIf  请求返回时的回调
+     */
+    public static void getCommentReplyList(Context ctx, CommentReplyRequestBody requestBody, IResponseCallback callbackIf) {
+        excuteRequest(ctx, requestBody, AppConstants.COMMENT_SYS, AppConstants.IF_COMMENT_REPLY, "v1000", callbackIf);
+    }
+
+    /**
+     * 获取我的评论列表
+     *
+     * @param ctx         调用页面的上下文
+     * @param requestBody 请求参数的数据类实例
+     * @param callbackIf  请求返回时的回调
+     */
+    public static void getMyCommentList(Context ctx, CommentReplyRequestBody requestBody, IResponseCallback callbackIf) {
+        excuteRequest(ctx, requestBody, AppConstants.COMMENT_SYS, AppConstants.IF_MY_COMMENT, "v1000", callbackIf);
     }
 
     /**

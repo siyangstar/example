@@ -202,6 +202,7 @@ public class ChatListFragment extends Fragment implements
             } else {
                 showDeleteMsgDialog(chatListItemInfo);
             }
+
             return true;
         }
         return false;
@@ -219,6 +220,12 @@ public class ChatListFragment extends Fragment implements
                         mAdapter.notifyDataSetChanged();
                         updateHint();
                         SharedPreferencesInfo.setTagBoolean(getActivity(), SharedPreferencesInfo.MSG_BOTTLE, false);
+
+                        Intent intent = new Intent();
+                        intent.putExtra("type", AppConstants.PUSH_BOTTLE);
+                        intent.setAction(AppConstants.ACTION_SOCKET_PUSH);
+                        getActivity().sendBroadcast(intent);
+
                         break;
                     case R.id.tv_cancel_collect:
                         mDeleteDialog.dismiss();
@@ -241,6 +248,12 @@ public class ChatListFragment extends Fragment implements
                         mAdapter.notifyDataSetChanged();
                         updateHint();
                         SharedPreferencesInfo.setTagBoolean(getActivity(), SharedPreferencesInfo.MSG_FRIEND_APPLY, false);
+
+                        Intent intent = new Intent();
+                        intent.putExtra("type", AppConstants.PUSH_FRIEND_APPLY);
+                        intent.setAction(AppConstants.ACTION_SOCKET_PUSH);
+                        getActivity().sendBroadcast(intent);
+
                         break;
                     case R.id.tv_cancel_collect:
                         mDeleteDialog.dismiss();
@@ -266,6 +279,12 @@ public class ChatListFragment extends Fragment implements
                         chatListDao.delete(chatListItemInfo);
                         ChatMsgDao chatMsgDao = ChatMsgDao.getInstance(getActivity());
                         chatMsgDao.delAllChatMsgFromAccount(chatListItemInfo.userAccount, chatListItemInfo.myAccount);
+
+                        Intent intent = new Intent();
+                        intent.putExtra("type", AppConstants.PUSH_CHAT);
+                        intent.setAction(AppConstants.ACTION_SOCKET_PUSH);
+                        getActivity().sendBroadcast(intent);
+
                         break;
                     case R.id.tv_cancel_collect:
                         mDeleteDialog.dismiss();

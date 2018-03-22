@@ -1627,15 +1627,17 @@ public class WebActivity extends HkActivity {
             if ((e1 == null) || (e2 == null)) {
                 return false;
             }
-            int FLING_MIN_DISTANCE = 200;
-            int FLING_MIN_VELOCITY = 100;
-            if (e1.getX() - e2.getX() > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY && Math.abs(e1.getY() - e2.getY()) < 100) {
+            float xRatio = (e1.getX() - e2.getX()) / AppUtil.getScreenW(WebActivity.this); //横向移动的距离与屏幕宽度的比例
+            float yRatio = Math.abs(e1.getY() - e2.getY()) / AppUtil.getScreenH(WebActivity.this); //纵向移动的距离与屏幕高度的比例的绝对值
+            float velocityXRatio = velocityX / AppUtil.getScreenW(WebActivity.this); //每秒横向移动的距离与屏幕宽度的比例
+//            System.out.println("@@@@@@@@@@@@   " + xRatio + "    " + yRatio + "    " + velocityX + "    " + velocityXRatio);
+            if (yRatio < 0.1 && (xRatio > 0.3 || velocityXRatio < -2)) {
                 // 向左滑动
-                if(mCommentStatus.equals("0")) {
+                if(!TextUtils.isEmpty(mCommentStatus) && mCommentStatus.equals("0")) {
                     //0表示文章可以正常评论
                     CommentActivity.launch(WebActivity.this, mId, mCommentStatus, mCommentMessage);
                 }
-            } else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY && Math.abs(e1.getY() - e2.getY()) < 100) {
+            } else if (yRatio < 0.1 && (xRatio < -0.3 || velocityXRatio > 2)) {
                 // 向右滑动
                 onBackPressed();
             }
