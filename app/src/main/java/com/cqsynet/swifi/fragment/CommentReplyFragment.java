@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ public class CommentReplyFragment extends Fragment {
     private static final String ARG_TYPE = "type";
     private String mType;
     private PullToRefreshListView mListView;
+    private LinearLayout mLlNoCommentRemind;
     private TextView mTvRemind;
     private ArrayList<CommentReplyInfo> mCommentList = new ArrayList<>();
     private CommentReplyAdapter mAdapter;
@@ -79,6 +81,7 @@ public class CommentReplyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comment_reply, container, false);
         mListView = view.findViewById(R.id.ptrLv_fragment_comment_reply);
+        mLlNoCommentRemind = view.findViewById(R.id.ll_noDataRemind_fragment_comment_reply);
         mTvRemind = view.findViewById(R.id.no_data_remind);
         mListView.setPullToRefreshOverScrollEnabled(false);
         mAdapter = new CommentReplyAdapter(getActivity(), mCommentList);
@@ -109,8 +112,17 @@ public class CommentReplyFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), ReplyActivity.class);
-                intent.putExtra("id", mCommentList.get(i - 1).originalCommentId);
+                intent.putExtra("id", mCommentList.get(i - 1).levelOneId);
                 intent.putExtra("nickname", mCommentList.get(i - 1).nickname);
+                if(mType.equals("commentReply")) {
+                    intent.putExtra("type", 2);
+                    intent.putExtra("levelTwoId", mCommentList.get(i - 1).id);
+                } else if (mType.equals("myComment") && !(mCommentList.get(i - 1).id.equals(mCommentList.get(i - 1).levelOneId))) {
+                    intent.putExtra("type", 2);
+                    intent.putExtra("levelTwoId", mCommentList.get(i - 1).id);
+                } else {
+                    intent.putExtra("type", 1);
+                }
                 startActivity(intent);
             }
         });
@@ -185,10 +197,10 @@ public class CommentReplyFragment extends Fragment {
      */
     private void refreshComment(CommentReplyResponseObject.CommentReplyResponseBody body) {
         if (body.commentList == null || body.commentList.size() == 0) {
-            mTvRemind.setVisibility(View.VISIBLE);
+            mLlNoCommentRemind.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.GONE);
         } else {
-            mTvRemind.setVisibility(View.GONE);
+            mLlNoCommentRemind.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
 
             mFreshTime = System.currentTimeMillis();
@@ -252,8 +264,8 @@ public class CommentReplyFragment extends Fragment {
                 viewHolder.tvUserLevel = convertView.findViewById(R.id.tv_userLevel_item_comment_reply);
                 viewHolder.tvNickname = convertView.findViewById(R.id.tv_nickname_item_comment_reply);
                 viewHolder.tvQuote = convertView.findViewById(R.id.tv_quote_item_comment_reply);
-                viewHolder.tvContent = convertView.findViewById(R.id.tv_content);
-                viewHolder.tvDate = convertView.findViewById(R.id.tv_date);
+                viewHolder.tvContent = convertView.findViewById(R.id.tv_content_item_comment_reply);
+                viewHolder.tvDate = convertView.findViewById(R.id.tv_date_item_comment_reply);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -280,7 +292,7 @@ public class CommentReplyFragment extends Fragment {
 
             viewHolder.tvContent.setText(commentReply.content);
             viewHolder.tvDate.setText(DateUtil.getRelativeTimeSpanString(Long.valueOf(commentReply.date)));
-            viewHolder.tvQuote.setText(commentReply.quote);
+            viewHolder.tvQuote.setText("[原文] " + commentReply.quoteContent);
             viewHolder.tvQuote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

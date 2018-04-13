@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cqsynet.swifi"
-    android:versionCode="82"
-    android:versionName="2.0.8(82)">
+    android:versionCode="84"
+    android:versionName="2.0.8(84)">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -113,7 +113,7 @@
             android:name=".activity.WifiActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/TranslucentTheme" />
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".activity.WifiTipActivity"
             android:launchMode="singleTop"
@@ -268,6 +268,10 @@
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".activity.social.ChatSearchActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.social.FriendSearchActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity

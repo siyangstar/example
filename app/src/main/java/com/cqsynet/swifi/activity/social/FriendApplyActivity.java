@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -95,7 +94,6 @@ public class FriendApplyActivity extends HkActivity {
         WebServiceIf.IResponseCallback callback = new WebServiceIf.IResponseCallback() {
             @Override
             public void onResponse(String response) throws JSONException {
-                Log.i("FriendApplyActivity", "@@@#@response: " + response);
                 Gson gson = new Gson();
                 FriendApplyResponseObject object = gson.fromJson(response, FriendApplyResponseObject.class);
                 ResponseHeader header = object.header;

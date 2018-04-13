@@ -268,7 +268,7 @@ public class SplashActivity extends Activity {
 
         //设置splash图片
         mIvSplash = findViewById(R.id.ivAdv_splash);
-        setImageHeight(mIvSplash);
+//        setImageHeight(mIvSplash);
         setSplash();
         //开始splash动画
         doAnimation();
@@ -304,7 +304,7 @@ public class SplashActivity extends Activity {
         if (launchImg != null) {
             GlideApp.with(this)
                     .load(launchImg.url)
-                    .centerCrop()
+                    .centerInside()
                     .error(R.color.transparent)
                     .listener(new RequestListener<Drawable>() {
                         @Override

@@ -20,7 +20,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.AdapterView;
@@ -29,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cqsynet.swifi.AppConstants;
@@ -73,11 +73,7 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
     private TextView mTvLocation;
     private TextView mTvFilterPerson;
     private FrameLayout mLayoutCategory;
-    private LinearLayout mLlCategory;
-    private TextView mTvTrain;
-    private TextView mTvLine;
-    private TextView mTvStation;
-    private TextView mTvNearby;
+    private RelativeLayout mRlCategory;
     private ImageView mIvClose;
     private PullToRefreshListView mListView;
     private LinearLayout mLlHint;
@@ -125,15 +121,11 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
         mTvFilterPerson = findViewById(R.id.tv_filter_person);
         mTvFilterPerson.setOnClickListener(this);
         mLayoutCategory = findViewById(R.id.layout_category);
-        mLlCategory = findViewById(R.id.ll_category);
-        mTvTrain = findViewById(R.id.tv_train);
-        mTvTrain.setOnClickListener(this);
-        mTvLine = findViewById(R.id.tv_line);
-        mTvLine.setOnClickListener(this);
-        mTvStation = findViewById(R.id.tv_station);
-        mTvStation.setOnClickListener(this);
-        mTvNearby = findViewById(R.id.tv_nearby);
-        mTvNearby.setOnClickListener(this);
+        mRlCategory = findViewById(R.id.rlCategory_layout_filter_find_person);
+        findViewById(R.id.cvTrain_layout_filter_find_person).setOnClickListener(this);
+        findViewById(R.id.cvLine_layout_filter_find_person).setOnClickListener(this);
+        findViewById(R.id.cvStation_layout_filter_find_person).setOnClickListener(this);
+        findViewById(R.id.cvNearby_layout_filter_find_person).setOnClickListener(this);
         mIvClose = findViewById(R.id.iv_close);
         mIvClose.setOnClickListener(this);
         mListView = findViewById(R.id.list_view);
@@ -227,28 +219,28 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
             case R.id.tv_filter_person:
                 showFilterDialog();
                 break;
-            case R.id.tv_train:
+            case R.id.cvTrain_layout_filter_find_person:
                 mTvCategory.setText(mFindCategoryArray[0]);
                 mType = TYPE_TRAIN;
                 mLoadingBar.setVisibility(View.VISIBLE);
                 findPerson(ACTION_REFRESH);
                 closeCategoryLayout();
                 break;
-            case R.id.tv_station:
+            case R.id.cvStation_layout_filter_find_person:
                 mTvCategory.setText(mFindCategoryArray[1]);
                 mType = TYPE_STATION;
                 mLoadingBar.setVisibility(View.VISIBLE);
                 findPerson(ACTION_REFRESH);
                 closeCategoryLayout();
                 break;
-            case R.id.tv_line:
+            case R.id.cvLine_layout_filter_find_person:
                 mTvCategory.setText(mFindCategoryArray[2]);
                 mType = TYPE_LINE;
                 mLoadingBar.setVisibility(View.VISIBLE);
                 findPerson(ACTION_REFRESH);
                 closeCategoryLayout();
                 break;
-            case R.id.tv_nearby:
+            case R.id.cvNearby_layout_filter_find_person:
                 mTvCategory.setText(mFindCategoryArray[3]);
                 mType = TYPE_NEARBY;
                 mLoadingBar.setVisibility(View.VISIBLE);
@@ -263,7 +255,7 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
 
     private void openCategoryLayout() {
         mLayoutCategory.setVisibility(View.VISIBLE);
-        ObjectAnimator springInAnimator = ObjectAnimator.ofFloat(mLlCategory, "translationY", -1800, 0);
+        ObjectAnimator springInAnimator = ObjectAnimator.ofFloat(mRlCategory, "translationY", -1800, 0);
         springInAnimator.setDuration(500);
         springInAnimator.setInterpolator(new SpringInterpolator(0.7f));
         springInAnimator.start();
@@ -274,7 +266,7 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
 
     private void closeCategoryLayout() {
         mIvClose.setEnabled(false);
-        ObjectAnimator springOutAnimator = ObjectAnimator.ofFloat(mLlCategory, "translationY", 0, -1800);
+        ObjectAnimator springOutAnimator = ObjectAnimator.ofFloat(mRlCategory, "translationY", 0, -1800);
         springOutAnimator.setDuration(500).start();
         ObjectAnimator fadeOutAnimator = ObjectAnimator.ofFloat(mLayoutCategory, "alpha", 1f, 0f);
         fadeOutAnimator.setDuration(500).start();
@@ -317,7 +309,6 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
             public void onResponse(String response) throws JSONException {
                 mLoadingBar.setVisibility(View.GONE);
                 mListView.onRefreshComplete();
-                Log.i("FindPersonActivity", "@@@#@response: " + response);
                 if (!TextUtils.isEmpty(response)) {
                     Gson gson = new Gson();
                     FindPersonResponseObject object = gson.fromJson(response, FindPersonResponseObject.class);
@@ -431,14 +422,16 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
                     mTvCategory.setTextSize(14);
                     if ("一号线".equals(mLine)) {
                         mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line1);
-                        mTvLocation.setText(mStation);
+                    } else if ("二号线".equals(mLine)) {
+                        mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line2);
+                    } else if ("三号线".equals(mLine)) {
+                        mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line3);
                     } else if ("六号线".equals(mLine)) {
                         mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line6);
-                        mTvLocation.setText(mStation);
                     } else {
                         mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line1);
-                        mTvLocation.setText(mStation);
                     }
+                    mTvLocation.setText(mStation);
                 }
                 break;
             case TYPE_LINE:
@@ -447,14 +440,16 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
                     mTvCategory.setTextSize(14);
                     if ("一号线".equals(mLine)) {
                         mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line1);
-                        mTvLocation.setText(mLine);
+                    } else if ("二号线".equals(mLine)) {
+                        mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line2);
+                    } else if ("三号线".equals(mLine)) {
+                        mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line3);
                     } else if ("六号线".equals(mLine)) {
                         mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line6);
-                        mTvLocation.setText(mLine);
                     } else {
                         mTvLocation.setBackgroundResource(R.drawable.bg_gradient_line1);
-                        mTvLocation.setText(mLine);
                     }
+                    mTvLocation.setText(mLine);
                 }
                 break;
         }
@@ -498,6 +493,8 @@ public class FindPersonActivity extends HkActivity implements View.OnClickListen
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, PersonInfoActivity.class);
         intent.putExtra("person", mPersonList.get(position - 1));
+        intent.putExtra("category", "1"); //1表示是社交,0表示是漂流瓶
+        intent.putExtra("isFriend", mPersonList.get(position - 1).isFriend);
         startActivity(intent);
     }
 

@@ -26,11 +26,13 @@ public class AppConstants {
 //    public static final String SERVER_URL = "http://yif-transferconfig.heikuai.com:9000/transferconfigif/interfaceCall";//转发服务器
 //    public static final String SERVER_MULTIPART_URL = "http://ysrv-filerecsys.heikuai.com:9000/filerecsysif/interfaceCall.if";//文件服务器
 //    public static final String SERVER_SOCKET_ADDRESS = "http://10.255.246.240:1994/heikuai"; //长连接socket地址
+//    public static final String COMPLAIN_PAGE = "http://testweb.heikuai.com/complaint/index.html"; //投诉页面测试环境
 
     // 生产环境地址
     public static final String SERVER_URL = "http://sif-transferconfig.heikuai.com:8000/transferconfigif/interfaceCall";//转发服务器
     public static final String SERVER_MULTIPART_URL = "http://ssrv-filerecsys.heikuai.com:8000/filerecsysif/interfaceCall.if";//文件服务器
     public static final String SERVER_SOCKET_ADDRESS = "http://ssrv-nodejs.heikuai.com:1994/heikuai"; //长连接socket地址
+    public static final String COMPLAIN_PAGE = "http://app.heikuai.com/complaint/index.html"; //投诉页面
 
     public static final String CACHE_DIR = "HeiKuai";
     public static final String CACHE_FILE = "debug.txt";
@@ -52,9 +54,6 @@ public class AppConstants {
     public static final String VERIFY_CODE_ERROR = "http://app.heikuai.com/message.html";
     // 评论页面
     public static final String COMMENT_PAGE = "http://app.heikuai.com/comments_lottery.html";
-    // 投诉页面
-    public static final String COMPLAIN_PAGE = "http://app.heikuai.com/complaint/index.html";
-//    public static final String COMPLAIN_PAGE = "http://testweb.heikuai.com/zt/complaint/index.html"; //测试
     // 抽奖秘籍页面
     public static final String LOTTERY_CHEATS_PAGE = "http://sftpw-img.heikuai.com:8000/zt/web/src/2017/5/cqAR/pages/tips.html";
     // 我的中奖页面

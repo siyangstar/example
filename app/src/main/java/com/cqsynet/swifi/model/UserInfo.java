@@ -74,4 +74,7 @@ public class UserInfo extends RequestBody implements Serializable {
 
 	public String lockMsg; //冻结提示语
 
+	public String socialStatus; //社交模块状态 0:可用 1:不可用
+
+    public String socialErrorPage; //社交模块不可用时,需要显示的页面地址
 }

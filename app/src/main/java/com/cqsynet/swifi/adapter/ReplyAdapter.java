@@ -169,13 +169,11 @@ public class ReplyAdapter extends BaseAdapter {
         WebServiceIf.IResponseCallback callback = new WebServiceIf.IResponseCallback() {
             @Override
             public void onResponse(String response) throws JSONException {
-                Log.i("CommentActivity", "@@@#submitLike onResponse: " + response);
                 mListener.onLikeClick(position, true);
             }
 
             @Override
             public void onErrorResponse() {
-                Log.e("CommentActivity", "@@@#onErrorResponse");
                 ToastUtil.showToast(mContext, "点赞失败");
                 mListener.onLikeClick(position, false);
             }

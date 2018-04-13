@@ -13,7 +13,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -268,13 +267,16 @@ public class PersonInfoActivity extends HkActivity implements View.OnClickListen
         mDeleteDialog.show();
     }
 
+    /**
+     * 投诉
+     */
     private void complaint() {
         Intent complainIntent = new Intent(this, SimpleWebActivity.class);
         complainIntent.putExtra("title", "投诉");
         complainIntent.putExtra("url", AppConstants.COMPLAIN_PAGE);
         complainIntent.putExtra("friendAccount", mFriendAccount);
         complainIntent.putExtra("userAccount", SharedPreferencesInfo.getTagString(this, SharedPreferencesInfo.ACCOUNT));
-        if(mCategory.equals("0")) {
+        if(!TextUtils.isEmpty(mCategory) && mCategory.equals("0")) {
             complainIntent.putExtra("complainType", "chat");
         } else {
             complainIntent.putExtra("complainType", "social");
@@ -322,7 +324,6 @@ public class PersonInfoActivity extends HkActivity implements View.OnClickListen
             @Override
             public void onResponse(String response) {
                 if (response != null) {
-                    Log.i("PersonInfoActivity", "@@@#@response: " + response);
                     Gson gson = new Gson();
                     UserInfoResponseObject responseObj = gson.fromJson(response, UserInfoResponseObject.class);
                     ResponseHeader header = responseObj.header;

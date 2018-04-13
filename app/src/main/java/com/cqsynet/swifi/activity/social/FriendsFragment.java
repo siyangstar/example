@@ -112,12 +112,12 @@ public class FriendsFragment extends Fragment implements AdapterView.OnItemClick
             } else {
                 name = Pinyin.toPinyin(mFriends.get(i).nickname.toCharArray()[0]);
             }
-            if (s.equals(name)) {
+            if (name.toUpperCase().startsWith(s)) {
                 position = i;
+                mListFriends.setSelection(position + 1); //+1是因为有个header搜索
                 break;
             }
         }
-        mListFriends.setSelection(position);
     }
 
     private void getFriends() {
@@ -202,7 +202,7 @@ public class FriendsFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (position == 0) {
-            startActivity(new Intent(getActivity(), ChatSearchActivity.class));
+            startActivity(new Intent(getActivity(), FriendSearchActivity.class));
         } else {
             Intent intent = new Intent(getActivity(), PersonInfoActivity.class);
             intent.putExtra("friendAccount", mFriends.get(position - 1).userAccount);

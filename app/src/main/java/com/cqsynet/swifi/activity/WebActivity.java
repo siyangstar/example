@@ -1631,13 +1631,14 @@ public class WebActivity extends HkActivity {
             float yRatio = Math.abs(e1.getY() - e2.getY()) / AppUtil.getScreenH(WebActivity.this); //纵向移动的距离与屏幕高度的比例的绝对值
             float velocityXRatio = velocityX / AppUtil.getScreenW(WebActivity.this); //每秒横向移动的距离与屏幕宽度的比例
 //            System.out.println("@@@@@@@@@@@@   " + xRatio + "    " + yRatio + "    " + velocityX + "    " + velocityXRatio);
-            if (yRatio < 0.1 && (xRatio > 0.3 || velocityXRatio < -2)) {
+            System.out.println("@@@@@@@@@@@@@  " + yRatio + "  " + xRatio + "  " + velocityXRatio);
+            if (yRatio < 0.06 && (xRatio > 0.3 || velocityXRatio < -2)) {
                 // 向左滑动
-                if(!TextUtils.isEmpty(mCommentStatus) && mCommentStatus.equals("0")) {
+//                if(!TextUtils.isEmpty(mCommentStatus) && mCommentStatus.equals("0")) {
                     //0表示文章可以正常评论
                     CommentActivity.launch(WebActivity.this, mId, mCommentStatus, mCommentMessage);
-                }
-            } else if (yRatio < 0.1 && (xRatio < -0.3 || velocityXRatio > 2)) {
+//                }
+            } else if (yRatio < 0.06 && (xRatio < -0.3 || velocityXRatio > 2)) {
                 // 向右滑动
                 onBackPressed();
             }

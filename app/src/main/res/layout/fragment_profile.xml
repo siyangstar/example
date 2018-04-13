@@ -7,7 +7,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
         android:scrollbars="none">
 
         <LinearLayout
@@ -16,11 +17,10 @@
             android:orientation="vertical">
 
             <!-- 个人信息 -->
-
             <LinearLayout
                 android:id="@+id/llHead_find"
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
+                android:layout_height="190dp"
                 android:background="@color/green"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -35,7 +35,7 @@
                     android:id="@+id/tvName_find"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:drawablePadding="4dp"
                     android:drawableRight="@drawable/edit"
                     android:textColor="@color/white"
@@ -45,12 +45,15 @@
             <LinearLayout
                 android:id="@+id/llMessage_find"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="20dp">
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -78,13 +81,11 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/more"/>
             </LinearLayout>
@@ -97,11 +98,14 @@
             <LinearLayout
                 android:id="@+id/llComment_find"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="20dp">
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -129,13 +133,11 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/more"/>
             </LinearLayout>
@@ -148,12 +150,15 @@
             <LinearLayout
                 android:id="@+id/llCollection_find"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="20dp">
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp">
 
                 <TextView
                     android:layout_width="0dp"
@@ -168,7 +173,6 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/more"/>
             </LinearLayout>
@@ -181,11 +185,14 @@
             <LinearLayout
                 android:id="@+id/llMyLottery_find"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="20dp">
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp">
 
                 <TextView
                     android:layout_width="0dp"
@@ -200,7 +207,6 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/more"/>
             </LinearLayout>
@@ -214,12 +220,15 @@
             <LinearLayout
                 android:id="@+id/llJianPaHuo_find"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="20dp">
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp">
 
                 <TextView
                     android:layout_width="0dp"
@@ -234,7 +243,6 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/more"/>
             </LinearLayout>
@@ -243,63 +251,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/line"/>
-
-            <LinearLayout
-                android:id="@+id/llSetting_find"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/layout_selecter"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingLeft="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/find_setting"
-                    android:drawablePadding="6dp"
-                    android:text="@string/setting"
-                    android:textColor="@color/text2"
-                    android:textSize="@dimen/text_size_large"/>
-
-                <ImageView
-                    android:id="@+id/ivSettingRemind_find"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/new_message_num_bg"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/more"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/line"/>
-
 
             <LinearLayout
                 android:id="@+id/llSuggestiong_find"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/layout_selecter"
                 android:gravity="center_vertical"
                 android:onClick="submitSuggest"
                 android:orientation="horizontal"
-                android:paddingLeft="20dp">
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -322,13 +287,11 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
                     android:contentDescription="@string/my_account"
                     android:scaleType="fitXY"
                     android:src="@drawable/more"/>
@@ -338,7 +301,54 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="@color/line"/>
-            
+
+            <LinearLayout
+                android:id="@+id/llSetting_find"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/layout_selecter"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/find_setting"
+                    android:drawablePadding="6dp"
+                    android:text="@string/setting"
+                    android:textColor="@color/text2"
+                    android:textSize="@dimen/text_size_large"/>
+
+                <ImageView
+                    android:id="@+id/ivSettingRemind_find"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/new_message_num_bg"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/more"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/line"/>
+
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
                 android:layout_height="24dp"/>
@@ -370,7 +380,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="12dp"
             android:text="@string/shake"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_largex"/>

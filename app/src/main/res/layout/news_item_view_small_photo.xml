@@ -17,8 +17,8 @@
             android:id="@+id/ivNewsThumbnail_small_photo"
             android:layout_width="117dp"
             android:layout_height="78dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:scaleType="fitXY" />
 
@@ -26,12 +26,13 @@
             android:id="@+id/tvNewsTitle_small_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@id/ivNewsThumbnail_small_photo"
-            android:lines="3"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@id/ivNewsThumbnail_small_photo"
+            android:maxLines="2"
+            android:lineSpacingExtra="6dp"
             android:text="这是标题"
             android:textColor="@color/text1"
-            android:textSize="17sp" />
+            android:textSize="@dimen/text_size_large" />
 
         <include
             android:id="@+id/llNewsInfo_small_photo"
@@ -40,8 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_below="@id/tvNewsTitle_small_photo"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@id/ivNewsThumbnail_small_photo" />
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@id/ivNewsThumbnail_small_photo" />
 
     </RelativeLayout>
 

@@ -89,8 +89,10 @@ public class ChatSearchActivity extends HkActivity implements SearchView.SearchV
         List<UserInfo> userInfos = ContactDao.getInstance(this).queryUserForName(text, text);
         ChatListDao chatListDao = ChatListDao.getInstance(this);
         for (UserInfo userInfo : userInfos) {
-            ChatListItemInfo chatListItemInfo = chatListDao.query(userInfo.userAccount,
-                    SharedPreferencesInfo.getTagString(this, SharedPreferencesInfo.ACCOUNT));
+            ChatListItemInfo chatListItemInfo = chatListDao.query(userInfo.userAccount, SharedPreferencesInfo.getTagString(this, SharedPreferencesInfo.ACCOUNT));
+            if(chatListItemInfo == null) {
+                continue;
+            }
             if (!TextUtils.isEmpty(userInfo.remark)) {
                 chatListItemInfo.position = userInfo.remark;
             } else {

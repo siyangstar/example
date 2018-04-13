@@ -20,7 +20,6 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,8 +37,8 @@ import com.cqsynet.swifi.adapter.CommentAdapter;
 import com.cqsynet.swifi.model.CommentInfo;
 import com.cqsynet.swifi.model.CommentListRequestBody;
 import com.cqsynet.swifi.model.CommentRequestBody;
-import com.cqsynet.swifi.model.CommentResponseObject;
 import com.cqsynet.swifi.model.CommentSubmitResponseObject;
+import com.cqsynet.swifi.model.LevelOneCommentResponseObject;
 import com.cqsynet.swifi.model.ReplyInfo;
 import com.cqsynet.swifi.model.ResponseHeader;
 import com.cqsynet.swifi.network.WebServiceIf;
@@ -249,10 +248,9 @@ public class CommentActivity extends HkActivity implements
             @Override
             public void onResponse(String response) throws JSONException {
                 mListView.onRefreshComplete();
-                Log.i("CommentActivity", "@@@#onResponse: " + response);
                 if (!TextUtils.isEmpty(response)) {
                     Gson gson = new Gson();
-                    CommentResponseObject object = gson.fromJson(response, CommentResponseObject.class);
+                    LevelOneCommentResponseObject object = gson.fromJson(response, LevelOneCommentResponseObject.class);
                     ResponseHeader header = object.header;
                     if (AppConstants.RET_OK.equals(header.ret)) {
                         if ("".equals(start)) {
@@ -266,13 +264,12 @@ public class CommentActivity extends HkActivity implements
 
             @Override
             public void onErrorResponse() {
-                Log.e("CommentActivity", "@@@#onErrorResponse");
             }
         };
         WebServiceIf.getCommentList(this, body, callback);
     }
 
-    private void refreshComment(CommentResponseObject.CommentResponseBody body) {
+    private void refreshComment(LevelOneCommentResponseObject.LevelOneCommentResponseBody body) {
         mFreshTime = System.currentTimeMillis();
         mListView.getLoadingLayoutProxy().setLastUpdatedLabel(
                 "更新于：" + DateUtil.getRelativeTimeSpanString(mFreshTime));
@@ -296,7 +293,7 @@ public class CommentActivity extends HkActivity implements
         mAdapter.notifyDataSetChanged();
     }
 
-    private void loadMoreComment(CommentResponseObject.CommentResponseBody body) {
+    private void loadMoreComment(LevelOneCommentResponseObject.LevelOneCommentResponseBody body) {
         if (body.newComment != null && body.newComment.size() > 0) {
             mComments.addAll(body.newComment);
             mHasMore = true;
@@ -323,7 +320,6 @@ public class CommentActivity extends HkActivity implements
         WebServiceIf.IResponseCallback callback = new WebServiceIf.IResponseCallback() {
             @Override
             public void onResponse(String response) throws JSONException {
-                Log.i("CommentActivity", "@@@#submitComment onResponse: " + response);
                 dismissProgressDialog();
                 if (!TextUtils.isEmpty(response)) {
                     Gson gson = new Gson();
@@ -361,7 +357,6 @@ public class CommentActivity extends HkActivity implements
 
             @Override
             public void onErrorResponse() {
-                Log.e("CommentActivity", "@@@#onErrorResponse");
                 dismissProgressDialog();
                 mDialog = CommentDialog.createDialog(CommentActivity.this, R.drawable.ic_failure, getString(R.string.comment_fail));
                 mDialog.show();
@@ -388,7 +383,6 @@ public class CommentActivity extends HkActivity implements
         WebServiceIf.IResponseCallback callback = new WebServiceIf.IResponseCallback() {
             @Override
             public void onResponse(String response) throws JSONException {
-                Log.i("CommentActivity", "@@@#submitComment onResponse: " + response);
                 dismissProgressDialog();
                 if (!TextUtils.isEmpty(response)) {
                     Gson gson = new Gson();
@@ -432,7 +426,6 @@ public class CommentActivity extends HkActivity implements
 
             @Override
             public void onErrorResponse() {
-                Log.e("CommentActivity", "@@@#onErrorResponse");
                 dismissProgressDialog();
                 mDialog = CommentDialog.createDialog(CommentActivity.this, R.drawable.ic_failure, getString(R.string.comment_fail));
                 mDialog.show();

@@ -15,7 +15,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -27,9 +26,13 @@ import android.widget.TextView;
 import com.cqsynet.swifi.AppConstants;
 import com.cqsynet.swifi.R;
 import com.cqsynet.swifi.activity.HkActivity;
+import com.cqsynet.swifi.db.ChatListDao;
+import com.cqsynet.swifi.db.ChatMsgDao;
 import com.cqsynet.swifi.db.ContactDao;
 import com.cqsynet.swifi.db.FriendApplyDao;
 import com.cqsynet.swifi.db.FriendsDao;
+import com.cqsynet.swifi.model.ChatListItemInfo;
+import com.cqsynet.swifi.model.ChatMsgInfo;
 import com.cqsynet.swifi.model.FriendApplyInfo;
 import com.cqsynet.swifi.model.FriendsInfo;
 import com.cqsynet.swifi.model.ReplyFriendRequestBody;
@@ -187,7 +190,6 @@ public class FriendApplyListActivity extends HkActivity implements
         WebServiceIf.IResponseCallback callback = new WebServiceIf.IResponseCallback() {
             @Override
             public void onResponse(String response) throws JSONException {
-                Log.i("FriendApplyListActivity", "@@@#@response: " + response);
                 // 将好友信息插入到联系人表中
                 UserInfo userInfo = new UserInfo();
                 userInfo.userAccount = mFriendApplyInfos.get(position).userAccount;
@@ -201,21 +203,41 @@ public class FriendApplyListActivity extends HkActivity implements
 
                 // 在好友表中插入一条新的数据
                 FriendsDao friendsDao = FriendsDao.getInstance(FriendApplyListActivity.this);
-                FriendsInfo friendsInfo = friendsDao.query(mFriendApplyInfos.get(position).userAccount,
-                        SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT));
+                FriendsInfo friendsInfo = friendsDao.query(mFriendApplyInfos.get(position).userAccount, SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT));
                 if (friendsInfo == null) {
-                    friendsDao.insert(mFriendApplyInfos.get(position).userAccount,
-                            SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT));
+                    friendsDao.insert(mFriendApplyInfos.get(position).userAccount, SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT));
                 }
 
                 // 修改好友申请表的数据
                 FriendApplyDao friendApplyDao = FriendApplyDao.getInstance(FriendApplyListActivity.this);
-                FriendApplyInfo friendApplyInfo = friendApplyDao.query(mFriendApplyInfos.get(position).userAccount,
-                        SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT));
+                FriendApplyInfo friendApplyInfo = friendApplyDao.query(mFriendApplyInfos.get(position).userAccount, SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT));
                 if (friendApplyInfo != null) {
                     friendApplyInfo.replyStatus = "1";
                     friendApplyDao.insert(friendApplyInfo, SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT));
                 }
+                //保存可以开始聊天的消息到聊天记录
+                ChatMsgInfo chatMsgInfo = new ChatMsgInfo();
+                chatMsgInfo.msgId = java.util.UUID.randomUUID().toString();
+                chatMsgInfo.type = "0"; //文字信息
+                chatMsgInfo.userAccount = SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT);
+                chatMsgInfo.receiveAccount = mFriendApplyInfos.get(position).userAccount;
+                chatMsgInfo.chatId = "";
+                chatMsgInfo.content = "我们已经是好友了,快来聊天吧";
+                chatMsgInfo.sendStatus = 0; //已发送成功
+                chatMsgInfo.readStatus = 1; //已读
+                chatMsgInfo.date = System.currentTimeMillis() + "";
+                ChatMsgDao.getInstance(FriendApplyListActivity.this).saveChatMsgItem(chatMsgInfo, "friend");
+                //更新聊天列表数据
+                ChatListItemInfo chatItem = new ChatListItemInfo();
+                chatItem.chatId = chatMsgInfo.chatId;
+                chatItem.type = chatMsgInfo.type;
+                chatItem.content = chatMsgInfo.content;
+                chatItem.updateTime = chatMsgInfo.date;
+                chatItem.userAccount = chatMsgInfo.receiveAccount;
+                chatItem.myAccount = SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT);
+                ChatListDao.getInstance(FriendApplyListActivity.this).insert(chatItem);
+                sendBroadcast(new Intent(AppConstants.ACTION_UPDATE_MSG));
+                sendBroadcast(new Intent(AppConstants.ACTION_ADD_FRIEND));
 
                 mFriendApplyInfos.clear();
                 mFriendApplyInfos.addAll(friendApplyDao.queryList(SharedPreferencesInfo.getTagString(FriendApplyListActivity.this, SharedPreferencesInfo.ACCOUNT)));

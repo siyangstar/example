@@ -944,6 +944,8 @@ public class NewsListFragment extends Fragment implements ViewPager.OnPageChange
                         }
                     }
                 });
+            } else {
+                mIvFloatingAdv.setVisibility(View.GONE);
             }
         } else {
             mIvFloatingAdv.setVisibility(View.GONE);

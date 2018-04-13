@@ -594,7 +594,7 @@ public class WebServiceIf {
      * @param callbackIf  请求返回时的回调
      */
     public static void getReplyList(Context ctx, ReplyListRequestBody requestBody, IResponseCallback callbackIf) {
-        excuteRequest(ctx, requestBody, AppConstants.COMMENT_SYS, AppConstants.IF_GET_LEVEL_TWO_COMMENT_LIST, "v1000", callbackIf);
+        excuteRequest(ctx, requestBody, AppConstants.COMMENT_SYS, AppConstants.IF_GET_LEVEL_TWO_COMMENT_LIST, "v1001", callbackIf);
     }
 
     /**

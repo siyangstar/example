@@ -437,7 +437,6 @@ public class PerfectInfoActivity extends HkActivity {
             @Override
             public void onResponse(String response) throws JSONException {
                 if (response != null) {
-                    Log.i("PerfectInfoActivity", "@@@#@response: " + response);
                     BaseResponseObject object = new Gson().fromJson(response, BaseResponseObject.class);
                     if (object.header != null) {
                         if (AppConstants.RET_OK.equals(object.header.ret)) {

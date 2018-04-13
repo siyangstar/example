@@ -12,6 +12,7 @@ package com.cqsynet.swifi.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.cqsynet.swifi.model.BlackUrlObject;
 
@@ -35,12 +36,16 @@ public class BlackWhiteUrlDao {
      */
     public static void saveWhiteList(Context context, ArrayList<String> whiteList) {
         DBHelper db = new DBHelper(context);
+        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
         for (String domain : whiteList) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(DBHelper.BWURL_COL_TYPE, "white");
             contentValues.put(DBHelper.BWURL_COL_URL, domain);
-            db.getWritableDatabase().insert(DBHelper.BLACK_WHITE_URL_TABLE, null, contentValues);
+            sqLiteDatabase.insert(DBHelper.BLACK_WHITE_URL_TABLE, null, contentValues);
         }
+        sqLiteDatabase.setTransactionSuccessful();
+        sqLiteDatabase.endTransaction();
         db.close();
     }
 
@@ -51,13 +56,17 @@ public class BlackWhiteUrlDao {
      */
     public static void saveBlackList(Context context, ArrayList<BlackUrlObject> blackList) {
         DBHelper db = new DBHelper(context);
+        SQLiteDatabase sqLiteDatabase = db.getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
         for (BlackUrlObject blackUrlObject : blackList) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(DBHelper.BWURL_COL_TYPE, "black");
             contentValues.put(DBHelper.BWURL_COL_URL, blackUrlObject.url);
             contentValues.put(DBHelper.BWURL_COL_ADV, blackUrlObject.showAdv);
-            db.getWritableDatabase().insert(DBHelper.BLACK_WHITE_URL_TABLE, null, contentValues);
+            sqLiteDatabase.insert(DBHelper.BLACK_WHITE_URL_TABLE, null, contentValues);
         }
+        sqLiteDatabase.setTransactionSuccessful();
+        sqLiteDatabase.endTransaction();
         db.close();
     }
 

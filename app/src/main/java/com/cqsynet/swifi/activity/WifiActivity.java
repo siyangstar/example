@@ -424,7 +424,7 @@ public class WifiActivity extends SwipeBackActivity implements View.OnClickListe
             setResult(200);
         }
         super.onBackPressed();
-        overridePendingTransition(R.anim.tranlate_in, R.anim.tranlate_out);
+        overridePendingTransition(0, R.anim.tranlate_out);
     }
 
     @Override

@@ -126,7 +126,6 @@ public class RemarkActivity extends HkActivity {
         WebServiceIf.modifyFriendRemark(this, body, new WebServiceIf.IResponseCallback() {
             @Override
             public void onResponse(String response) throws JSONException {
-                Log.i("RemarkActivity", "@@@#@response: " + response);
                 ContactDao contactDao = ContactDao.getInstance(RemarkActivity.this);
                 UserInfo userInfo = contactDao.queryUser(mFriendAccount);
                 if (userInfo != null) {

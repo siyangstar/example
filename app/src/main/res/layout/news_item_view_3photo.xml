@@ -14,9 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="2"
+        android:lineSpacingExtra="6dp"
         android:text="这是标题"
         android:textColor="@color/text1"
-        android:textSize="@dimen/text_size_largex" />
+        android:textSize="@dimen/text_size_large" />
 
     <LinearLayout
         android:layout_width="match_parent"

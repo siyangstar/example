@@ -15,6 +15,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.cqsynet.swifi.activity.GalleryActivity;
+import com.cqsynet.swifi.activity.TopicActivity;
 import com.cqsynet.swifi.activity.WebActivity;
 import com.cqsynet.swifi.activity.YouzanWebActivity;
 
@@ -42,26 +44,40 @@ public class WebActivityDispatcher {
      */
     public void dispatch(Intent intent, Context context, int requestCode) {
         String url = intent.getStringExtra("url");
-        if (url.toLowerCase().contains("&yz=1") || url.toLowerCase().contains("?yz=1")) {
-            mType = YOUZAN;
-        } else if(requestCode != -1) {
-            mType = NORMAL_RESPONSE;
-        } else {
-            mType = NORMAL;
-        }
-        switch (mType) {
-            case NORMAL:
-                intent.setClass(context, WebActivity.class);
+        if(url.startsWith("http")) {
+            if (url.toLowerCase().contains("&yz=1") || url.toLowerCase().contains("?yz=1")) {
+                mType = YOUZAN;
+            } else if (requestCode != -1) {
+                mType = NORMAL_RESPONSE;
+            } else {
+                mType = NORMAL;
+            }
+            switch (mType) {
+                case NORMAL:
+                    intent.setClass(context, WebActivity.class);
+                    context.startActivity(intent);
+                    break;
+                case NORMAL_RESPONSE:
+                    intent.setClass(context, WebActivity.class);
+                    ((Activity) context).startActivityForResult(intent, requestCode);
+                    break;
+                case YOUZAN:
+                    intent.setClass(context, YouzanWebActivity.class);
+                    context.startActivity(intent);
+                    break;
+            }
+        } else if (url.startsWith("heikuai://gallery")) {
+            if (url.split("=").length >= 2) {
+                intent.putExtra("id", url.split("=")[1]);
+                intent.setClass(context, GalleryActivity.class);
                 context.startActivity(intent);
-                break;
-            case NORMAL_RESPONSE:
-                intent.setClass(context, WebActivity.class);
-                ((Activity)context).startActivityForResult(intent, requestCode);
-                break;
-            case YOUZAN:
-                intent.setClass(context, YouzanWebActivity.class);
+            }
+        } else if (url.startsWith("heikuai://topic")) {
+            if (url.split("=").length >= 2) {
+                intent.putExtra("id", url.split("=")[1]);
+                intent.setClass(context, TopicActivity.class);
                 context.startActivity(intent);
-                break;
+            }
         }
     }
 

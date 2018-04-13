@@ -189,16 +189,25 @@ public class HomeActivity extends BasicFragmentActivity implements OnClickListen
                 mIvSns.setSelected(false);
                 mIvFind.setSelected(false);
                 break;
-            case R.id.iv_sns: // 点击进入漂流瓶
+            case R.id.iv_sns: // 点击进入社交
                 if (Globals.g_userInfo == null) {
                     break;
                 }
-                if (Globals.g_userInfo.lock.equals("2")) {
+                //判断社交模块是否可用
+                if (!TextUtils.isEmpty(Globals.g_userInfo.socialStatus) && Globals.g_userInfo.socialStatus.equals("1")) {
+                    Intent intent = new Intent();
+                    intent.setClass(this, SimpleWebActivity.class);
+                    intent.putExtra("url", Globals.g_userInfo.socialErrorPage);
+                    startActivity(intent);
+                    break;
+                }
+                //判断用户是否被冻结
+                if (!TextUtils.isEmpty(Globals.g_userInfo.lock) && Globals.g_userInfo.lock.equals("2")) {
                     ToastUtil.showToast(this, Globals.g_userInfo.lockMsg);
                     break;
                 }
                 //用户是否需要进入个人设置
-                if (Globals.g_userInfo.setting.equals("1")) {
+                if (!TextUtils.isEmpty(Globals.g_userInfo.setting) && Globals.g_userInfo.setting.equals("1")) {
                     startActivity(new Intent(this, PerfectInfoActivity.class));
                 } else {
                     startActivity(new Intent(this, SocialActivity.class));

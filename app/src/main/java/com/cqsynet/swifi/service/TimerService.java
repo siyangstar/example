@@ -16,7 +16,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.util.Log;
 
 import com.cqsynet.swifi.AppConstants;
 import com.cqsynet.swifi.Globals;
@@ -32,6 +31,7 @@ import com.cqsynet.swifi.model.WiFiObject;
 import com.cqsynet.swifi.network.WebServiceIf;
 import com.cqsynet.swifi.util.CountDownTimer;
 import com.cqsynet.swifi.util.DateUtil;
+import com.cqsynet.swifi.util.LogUtil;
 import com.cqsynet.swifi.util.NetworkUtil;
 import com.cqsynet.swifi.util.SharedPreferencesInfo;
 import com.cqsynet.swifi.util.WifiUtil;
@@ -86,7 +86,11 @@ public class TimerService extends Service {
                 if (info != null && info.getState().equals(NetworkInfo.State.CONNECTED)) {
                     WifiManager wifiManager = (WifiManager) context.getApplicationContext()
                             .getSystemService(Context.WIFI_SERVICE);
-                    wifiManager.startScan();
+                    try {
+                        wifiManager.startScan();
+                    } catch (SecurityException e) {
+                        LogUtil.writeToFile("TimerService -> wifiManager.startScan -> SecurityException: \n" + e.getMessage());
+                    }
                     WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                     if (wifiInfo != null && NetworkUtil.formatSSID(wifiInfo.getSSID()).startsWith(AppConstants.WIFI_SSID)) {
                         Globals.mIsConnectFreeWifi = true;
@@ -210,7 +214,9 @@ public class TimerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mBroadcastReceiver);
+        if(mBroadcastReceiver != null) {
+            unregisterReceiver(mBroadcastReceiver);
+        }
         mHandler.removeMessages(MSG_UPDATE_USER_GROUP);
         mHandler.removeMessages(MSG_SHOW_DISCONNECTED_DIALOG);
         mCDTimer.cancel();
@@ -303,7 +309,6 @@ public class TimerService extends Service {
 
             @Override
             public void onErrorResponse() {
-                Log.i("HomeActivity", "@@@#onErrorResponse");
             }
         };
         WebServiceIf.sendWifiList(this, body, callback);

@@ -87,6 +87,8 @@ public class FriendApplyAdapter extends BaseAdapter {
         if (userInfo != null) {
             if (!TextUtils.isEmpty(userInfo.remark)) {
                 viewHolder.tvName.setText(userInfo.remark);
+            } else {
+                viewHolder.tvName.setText(friendApply.nickname);
             }
         } else {
             viewHolder.tvName.setText(friendApply.nickname);

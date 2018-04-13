@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -185,7 +184,6 @@ public class TimerPromptActivity extends HkActivity implements View.OnClickListe
             @Override
             public void onResponse(String response) throws JSONException {
                 if (response != null) {
-                    Log.i("TimerPromptActivity", "@@@#@onResponse: " + response);
                     OpenFreeWifiResponseObject responseObj = new Gson().fromJson(response,
                             OpenFreeWifiResponseObject.class);
                     if (responseObj.header != null) {

@@ -33,7 +33,6 @@ import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -601,7 +600,6 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
             @Override
             public void onResponse(String response) {
                 if (response != null && position < mChatList.size()) {
-                    Log.i("ChatActivity", "@@@#@response: " + response);
                     Gson gson = new Gson();
                     MessageResponseObject responseObj = gson.fromJson(response, MessageResponseObject.class);
                     ResponseHeader header = responseObj.header;
@@ -699,6 +697,11 @@ public class ChatActivity extends HkActivity implements View.OnClickListener, Se
         WebServiceIf.sendMessage(this, files, requestBody, callbackIf);
     }
 
+    /**
+     * 更新聊天列表数据
+     *
+     * @param chatMsgInfo
+     */
     private void updateMsg(ChatMsgInfo chatMsgInfo) {
         ChatListItemInfo chatItem = new ChatListItemInfo();
         chatItem.chatId = chatMsgInfo.chatId;

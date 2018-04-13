@@ -190,4 +190,8 @@ public class SearchView extends LinearLayout implements View.OnClickListener {
         
     }
 
+    public void setHint(String hint) {
+        mInput.setHint(hint);
+    }
+
 }

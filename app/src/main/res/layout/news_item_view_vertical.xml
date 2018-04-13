@@ -14,9 +14,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="4dp"
+        android:lineSpacingExtra="6dp"
         android:text="这是标题"
         android:textColor="@color/text1"
-        android:textSize="@dimen/text_size_largex" />
+        android:textSize="@dimen/text_size_large" />
 
     <ImageView
         android:id="@+id/ivNewsPhoto_vertical"

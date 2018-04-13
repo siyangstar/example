@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class CommentReplyResponseObject extends BaseResponseObject {
 
-    public CommentReplyResponseBody body;
+    public CommentReplyResponseBody body = new CommentReplyResponseBody();
 
     public class CommentReplyResponseBody {
         public int commentCount;

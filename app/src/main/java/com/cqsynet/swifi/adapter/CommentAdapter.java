@@ -14,7 +14,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -241,13 +240,11 @@ public class CommentAdapter extends BaseAdapter {
         WebServiceIf.IResponseCallback callback = new WebServiceIf.IResponseCallback() {
             @Override
             public void onResponse(String response) throws JSONException {
-                Log.i("CommentActivity", "@@@#submitLike onResponse: " + response);
                 mListener.onLikeClick(position, true);
             }
 
             @Override
             public void onErrorResponse() {
-                Log.e("CommentActivity", "@@@#onErrorResponse");
                 mListener.onLikeClick(position, false);
             }
         };

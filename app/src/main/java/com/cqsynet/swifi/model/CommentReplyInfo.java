@@ -12,7 +12,7 @@ package com.cqsynet.swifi.model;
 public class CommentReplyInfo {
 
     public String id;
-    public String originalCommentId;
+    public String levelOneId;
     public String userAccount;
     public String nickname;
     public String headUrl;
@@ -20,6 +20,6 @@ public class CommentReplyInfo {
     public String content;
     public String date;
     public String quoteUrl;
-    public String quote;
+    public String quoteContent;
 
 }

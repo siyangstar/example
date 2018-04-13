@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_reply_item">
@@ -30,41 +32,46 @@
             android:scaleType="fitCenter"
             android:src="@drawable/icon_profile_default_round" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:lines="1"
                 android:textColor="@color/text1"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_size_large"
+                tools:text="昵称"/>
 
             <TextView
                 android:id="@+id/tv_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_gravity="bottom"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="82dp"
-                android:maxLines="1"
+                android:lines="1"
                 android:textColor="@color/text3"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_size_mediumx"
+                tools:text="内容"/>
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_agree"
-                android:layout_width="66dp"
-                android:layout_height="36dp"
-                android:layout_gravity="end|center_vertical"
-                android:background="@drawable/bg_green_radius_selector"
-                android:gravity="center"
-                android:text="同意"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
-        </FrameLayout>
+        <TextView
+            android:id="@+id/tv_agree"
+            android:layout_width="66dp"
+            android:layout_height="36dp"
+            android:layout_gravity="end|center_vertical"
+            android:background="@drawable/bg_green_radius_selector"
+            android:gravity="center"
+            android:text="同意"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <View

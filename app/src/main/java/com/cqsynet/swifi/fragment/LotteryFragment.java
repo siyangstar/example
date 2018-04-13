@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -200,7 +199,6 @@ public class LotteryFragment extends Fragment implements AdapterView.OnItemClick
             String userAccount = SharedPreferencesInfo.getTagString(getActivity(), SharedPreferencesInfo.ACCOUNT);
             Intent urlIntent = new Intent(getActivity(), SimpleWebActivity.class);
             urlIntent.putExtra("url", url + "?userAccount=" + userAccount + "&win_pk_id=" + lottery.getId());
-            Log.i("LotteryFragment", "@@@@url: " + url + "?userAccount=" + userAccount + "&win_pk_id=" + lottery.getId());
             startActivity(urlIntent);
         } else {
             Intent intent = new Intent(getActivity(), LotteryDetailActivity.class);

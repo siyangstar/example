@@ -12,7 +12,6 @@ package com.cqsynet.swifi.activity.social;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -109,7 +108,6 @@ public class BottleFriendInfoActivity extends HkActivity {
             @Override
             public void onResponse(String response) {
                 if (response != null) {
-                    Log.i("PersonInfoActivity", "@@@#@response: " + response);
                     Gson gson = new Gson();
                     UserInfoResponseObject responseObj = gson.fromJson(response, UserInfoResponseObject.class);
                     ResponseHeader header = responseObj.header;

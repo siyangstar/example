@@ -11,17 +11,25 @@ package com.cqsynet.swifi.activity.social;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.animation.AnimationUtils;
 
 import com.cqsynet.swifi.Globals;
 import com.cqsynet.swifi.R;
 import com.cqsynet.swifi.activity.BottleActivity;
 import com.cqsynet.swifi.util.ToastUtil;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Author: sayaki
@@ -29,41 +37,68 @@ import com.cqsynet.swifi.util.ToastUtil;
  */
 public class FindPersonFragment extends Fragment implements View.OnClickListener {
 
+    private CardView mCvTrain;
+    private CardView mCvStation;
+    private CardView mCvNearby;
+    private CardView mCvLine;
+    private CardView mCvBottle;
+    private Iterator<CardView> mCardViewIterator;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_find_person, container, false);
 
-        TextView tvTrain = view.findViewById(R.id.tv_train);
-        tvTrain.setOnClickListener(this);
-        TextView tvLine = view.findViewById(R.id.tv_line);
-        tvLine.setOnClickListener(this);
-        TextView tvStation = view.findViewById(R.id.tv_station);
-        tvStation.setOnClickListener(this);
-        TextView tvNearby = view.findViewById(R.id.tv_nearby);
-        tvNearby.setOnClickListener(this);
-        TextView tvBottle = view.findViewById(R.id.tv_bottle);
-        tvBottle.setOnClickListener(this);
+        mCvTrain = view.findViewById(R.id.cvTrain_fragment_find_person);
+        mCvStation = view.findViewById(R.id.cvStation_fragment_find_person);
+        mCvNearby = view.findViewById(R.id.cvNearby_fragment_find_person);
+        mCvLine = view.findViewById(R.id.cvLine_fragment_find_person);
+        mCvBottle = view.findViewById(R.id.cvBottle_fragment_find_person);
+
+        mCvTrain.setOnClickListener(this);
+        mCvStation.setOnClickListener(this);
+        mCvNearby.setOnClickListener(this);
+        mCvLine.setOnClickListener(this);
+        mCvBottle.setOnClickListener(this);
+
+        List<CardView> cardList = new LinkedList<>();
+        cardList.add(mCvStation);
+        cardList.add(mCvNearby);
+        cardList.add(mCvLine);
+        cardList.add(mCvBottle);
+        Collections.shuffle(cardList);
+        mCardViewIterator = cardList.iterator();
+
+        //先显示同列车
+        Message msg = new Message();
+        msg.obj = mCvTrain;
+        msg.what = 0;
+        mHdl.sendMessageDelayed(msg, 200);
 
         return view;
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_train:
+            case R.id.cvTrain_fragment_find_person:
                 FindPersonActivity.launch(getActivity(), FindPersonActivity.TYPE_TRAIN);
                 break;
-            case R.id.tv_line:
+            case R.id.cvLine_fragment_find_person:
                 FindPersonActivity.launch(getActivity(), FindPersonActivity.TYPE_LINE);
                 break;
-            case R.id.tv_station:
+            case R.id.cvStation_fragment_find_person:
                 FindPersonActivity.launch(getActivity(), FindPersonActivity.TYPE_STATION);
                 break;
-            case R.id.tv_nearby:
+            case R.id.cvNearby_fragment_find_person:
                 FindPersonActivity.launch(getActivity(), FindPersonActivity.TYPE_NEARBY);
                 break;
-            case R.id.tv_bottle:
+            case R.id.cvBottle_fragment_find_person:
                 //用户是否被冻结
                 if (Globals.g_userInfo.lock.equals("1")) {
                     ToastUtil.showToast(getActivity(), Globals.g_userInfo.lockMsg);
@@ -72,6 +107,32 @@ public class FindPersonFragment extends Fragment implements View.OnClickListener
                     startActivity(intent);
                 }
                 break;
+        }
+    }
+
+    private Handler mHdl = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    CardView cardView = (CardView) msg.obj;
+                    cardView.setVisibility(View.VISIBLE);
+                    cardView.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.social_btn_fade_in));
+                    showCardView();
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 逐个显示item
+     */
+    private void showCardView() {
+        if(mCardViewIterator.hasNext()) {
+            Message msg = new Message();
+            msg.obj = mCardViewIterator.next();
+            msg.what = 0;
+            mHdl.sendMessageDelayed(msg, 400);
         }
     }
 }

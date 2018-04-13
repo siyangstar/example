@@ -89,12 +89,12 @@ public class ChatListDao {
     }
 
     public ChatListItemInfo query(String userAccount, String owner) {
-        ChatListItemInfo chatListItemInfo = new ChatListItemInfo();
         DBHelper db = new DBHelper(mContext);
         Cursor cursor = db.getWritableDatabase().query(DBHelper.CHAT_LIST_TABLE, null,
                 DBHelper.CHAT_LIST_COL_ACCOUNT + "=? and " + DBHelper.CHAT_LIST_COL_OWNER + "=?",
                 new String[]{userAccount, owner}, null, null, null);
         if (cursor.moveToFirst()) {
+            ChatListItemInfo chatListItemInfo = new ChatListItemInfo();
             chatListItemInfo.chatId = cursor.getString(cursor.getColumnIndex(DBHelper.CHAT_LIST_COL_CHATID));
             chatListItemInfo.myAccount = cursor.getString(cursor.getColumnIndex(DBHelper.CHAT_LIST_COL_OWNER));
             chatListItemInfo.userAccount = cursor.getString(cursor.getColumnIndex(DBHelper.CHAT_LIST_COL_ACCOUNT));
@@ -103,10 +103,14 @@ public class ChatListDao {
             chatListItemInfo.updateTime = cursor.getString(cursor.getColumnIndex(DBHelper.CHAT_LIST_COL_UPDATETIME));
             chatListItemInfo.position = cursor.getString(cursor.getColumnIndex(DBHelper.CHAT_LIST_COL_POSITION));
             chatListItemInfo.draft = cursor.getString(cursor.getColumnIndex(DBHelper.CHAT_LIST_COL_DRAFT));
+            cursor.close();
+            db.close();
+            return chatListItemInfo;
+        } else {
+            cursor.close();
+            db.close();
+            return null;
         }
-        cursor.close();
-        db.close();
-        return chatListItemInfo;
     }
 
     public List<ChatListItemInfo> queryList(String myAccount) {

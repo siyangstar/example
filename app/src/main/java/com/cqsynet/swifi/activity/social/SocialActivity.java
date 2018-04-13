@@ -14,6 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
@@ -40,7 +42,10 @@ import java.util.List;
  */
 public class SocialActivity extends BasicFragmentActivity {
 
+    private FrameLayout mFlTitlebar;
+    private ImageView mIvBack;
     private TextView mTvTitle;
+    private TextView mTvMine;
     private NoSlidingViewPager mViewPager;
     private ImageView mIvMessage;
     private TextView mTvMessage;
@@ -56,15 +61,18 @@ public class SocialActivity extends BasicFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social);
 
+        mFlTitlebar = findViewById(R.id.flTitlebar_activity_social);
+        mIvBack = findViewById(R.id.ivBack_activity_social);
         mTvTitle = findViewById(R.id.tvTitle_activity_social);
+        mTvMine = findViewById(R.id.tvMine_activity_social);
         mTvTitle.setText("找人");
-        findViewById(R.id.ivBack_activity_social).setOnClickListener(new View.OnClickListener() {
+        mIvBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        findViewById(R.id.ivMine_activity_social).setOnClickListener(new View.OnClickListener() {
+        mTvMine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SocialActivity.this, UserCenterActivity.class);
@@ -97,6 +105,10 @@ public class SocialActivity extends BasicFragmentActivity {
         flMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mFlTitlebar.setBackgroundColor(getResources().getColor(R.color.white));
+//                mIvBack.setImageResource(R.drawable.btn_back_green_selector);
+//                mTvMine.setTextColor(getResources().getColor(R.color.text2));
+//                mTvTitle.setTextColor(getResources().getColor(R.color.text1));
                 mTvTitle.setText("消息");
                 mIvMessage.setImageResource(R.drawable.ic_social_msg_green);
                 mTvMessage.setTextColor(getResources().getColor(R.color.green));
@@ -110,6 +122,10 @@ public class SocialActivity extends BasicFragmentActivity {
         llFindPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mFlTitlebar.setBackgroundResource(R.drawable.social_title_bg);
+//                mIvBack.setImageResource(R.drawable.btn_back_selector);
+//                mTvTitle.setTextColor(getResources().getColor(R.color.text1));
+//                mTvMine.setTextColor(getResources().getColor(R.color.text2));
                 mTvTitle.setText("找人");
                 mIvMessage.setImageResource(R.drawable.ic_social_msg_gray);
                 mTvMessage.setTextColor(getResources().getColor(R.color.text3));
@@ -117,12 +133,17 @@ public class SocialActivity extends BasicFragmentActivity {
                 mTvFindPerson.setTextColor(getResources().getColor(R.color.green));
                 mIvFriends.setImageResource(R.drawable.ic_social_friend_gray);
                 mTvFriends.setTextColor(getResources().getColor(R.color.text3));
-                mViewPager.setCurrentItem(1, false);
+//                mViewPager.setCurrentItem(1, false);
+                mHdl.sendEmptyMessageDelayed(0, 40);
             }
         });
         llFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mFlTitlebar.setBackgroundColor(getResources().getColor(R.color.white));
+//                mIvBack.setImageResource(R.drawable.btn_back_green_selector);
+//                mTvTitle.setTextColor(getResources().getColor(R.color.text1));
+//                mTvMine.setTextColor(getResources().getColor(R.color.text2));
                 mTvTitle.setText("好友");
                 mIvMessage.setImageResource(R.drawable.ic_social_msg_gray);
                 mTvMessage.setTextColor(getResources().getColor(R.color.text3));
@@ -191,4 +212,15 @@ public class SocialActivity extends BasicFragmentActivity {
             }
         }
     }
+
+    Handler mHdl = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    mViewPager.setCurrentItem(1, false);
+                    break;
+            }
+        }
+    };
 }
